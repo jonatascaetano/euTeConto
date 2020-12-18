@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:Confidence/abas/biblioteca.dart';
 import 'package:Confidence/abas/comentarios.dart';
 import 'package:Confidence/abas/inicio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,6 +11,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin<HomePage>{
+
+
+  User user;
+
+  usuarioLogado()async{
+    FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    print(user.uid);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    usuarioLogado();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,44 +41,47 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                SliverAppBar(
                 elevation: 50,
                 backgroundColor: Color(0xff0f1b1b),                  
-                toolbarHeight: 30, 
-                floating: true,
-                snap: true,
-                pinned: false,                 
+                toolbarHeight: 30,                
                 flexibleSpace: FlexibleSpaceBar(                 
-                  collapseMode: CollapseMode.none,
-                  centerTitle: true,
+                  collapseMode: CollapseMode.none,                 
                   titlePadding: EdgeInsets.zero,
-                  title: Text(
+                  title: Padding(padding: EdgeInsets.only(left: 16),
+                    child: Text(
                         "Eu te conto",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24.0,
                           fontStyle: FontStyle.italic,                          
                         )
-                    ),             
+                    ),
+                  )          
                 ),
                  actions: [                
                    IconButton(
                      icon: Icon(Icons.search_rounded),
-                     color: Colors.grey,
+                     color: Colors.white,
                      onPressed: (){}
                      ),
-                   IconButton(
-                     icon: Icon(Icons.account_circle_sharp,
-                      color: Colors.orange
-                     ),
-                     color: Colors.grey,
-                     onPressed: (){}
-                      )
+
+                    user != null ?  IconButton(
+                     icon: Icon(Icons.exit_to_app),
+                     color: Colors.red,
+                     onPressed: (){
+                       FirebaseAuth.instance.signOut().then((_){
+                         setState(() {
+                           usuarioLogado();
+                         });
+                       });
+                     }
+                     ) : Container()
                  ],   
               ),
                SliverPersistentHeader(               
                 delegate: _SliverAppBarDelegate(                 
                   TabBar(                                    
-                    labelColor: Colors.orangeAccent,                    
+                    labelColor: Color(0xffffa366),                    
                     indicatorColor: Colors.transparent,                  
-                    unselectedLabelColor: Colors.grey,                                     
+                    unselectedLabelColor: Color(0xffb34700),                                                         
                     tabs:                      
                     [
                       Tab(                

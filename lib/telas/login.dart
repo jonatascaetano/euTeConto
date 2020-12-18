@@ -1,12 +1,16 @@
+import 'dart:ui';
+import 'package:Confidence/abas/biblioteca.dart';
+import 'package:Confidence/telas/cadastro.dart';
+import 'package:Confidence/telas/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Cadastro extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _CadastroState createState() => _CadastroState();
+  _LoginState createState() => _LoginState();
 }
 
-class _CadastroState extends State<Cadastro> {
+class _LoginState extends State<Login> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
@@ -15,40 +19,44 @@ class _CadastroState extends State<Cadastro> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future cadastrar()async{
-    FirebaseAuth.instance.createUserWithEmailAndPassword(
+  Future entrar()async{
+    FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text,
        password: senhaController.text
        ).then((value){
-         Navigator.of(context).pop();
+         Navigator.of(context).pushReplacement(
+           MaterialPageRoute(builder: (context)=> HomePage())
+         );
        }).catchError((error){
-        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Erro ao realizar cadastro')));
+        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Erro ao realizar login')));
          
-       });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor:  Color(0xff272727),
-      appBar: AppBar(
-        title: Text('Cadastro'),
-      ),
+      backgroundColor: Color(0xff272727),
       body: Form(
         key: _formKey,
       child: SingleChildScrollView(
-          child: Container(
+        child:
+          Container(
             margin: EdgeInsets.only(left: 8, right: 8),
             child: Column(              
             children: [
               SizedBox(height: 30),
-              
+              Text('Faça login para acessar',
+              style: TextStyle(
+                    color: Colors.white
+                  ),
+              ),
               TextFormField(
                 controller: emailController,
                 validator: (texto){
                   if(texto.isEmpty || !texto.contains('@')) return 'Email inválido';
-                },
+                },               
                 style: TextStyle(
                   color: Colors.white
                 ),
@@ -86,7 +94,7 @@ class _CadastroState extends State<Cadastro> {
               ),
               SizedBox(height: 8,),
               RaisedButton(
-                child: Text('Cadastrar',
+                child: Text('Entrar',
                   style: TextStyle(
                     color: Colors.white
                   ),
@@ -94,15 +102,26 @@ class _CadastroState extends State<Cadastro> {
                 color: Colors.grey[800],
                 onPressed: (){
                   if(_formKey.currentState.validate()){
-                    cadastrar();
+                    entrar();
                   }
                 }
                 ),
               SizedBox(height: 8,),
-             
+              GestureDetector(
+                child: Text('não tem conta? cadastre-se',
+              style: TextStyle(
+                    color: Colors.white
+                  ),
+              ),
+              onTap: (){
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context)=> Cadastro())
+                );
+              },  
+              )
             ],
           ),
-          ),
+          )
       ),
     ),
     );

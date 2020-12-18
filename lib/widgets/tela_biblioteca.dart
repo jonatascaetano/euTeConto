@@ -9,7 +9,10 @@ class _TelaBibliotecaState extends State<TelaBiblioteca> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
+      color: Colors.grey,
+      child: Center(
+        child: Text('Biblioteca'),
+      ),
     );
   }
 }

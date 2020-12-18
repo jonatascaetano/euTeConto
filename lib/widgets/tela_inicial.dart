@@ -16,6 +16,7 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,19 +36,30 @@ class _TelaInicialState extends State<TelaInicial> {
 
                     SizedBox(height: 8,),
 
-                    Text(widget.listaContos[index]['titulo'],
-                      maxLines: 2,                     
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0
+                    Wrap(
+                      children: [
+                        Text(widget.listaContos[index]['titulo'],
+                          maxLines: 2,                     
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0
+                            ),
                         ),
-                     ),
+                        Text(widget.listaContos[index]['categoria'],
+                          maxLines: 1,                     
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 18.0
+                            ),
+                        ),
+                      ],
+                    ),
 
                     SizedBox(height: 8,),
 
                    Text(DateTime.now().toString(),
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Color(0xffb34700),
                       ),
                     ),
 
@@ -64,7 +76,7 @@ class _TelaInicialState extends State<TelaInicial> {
                     Wrap(
                       children: [
                         Text(widget.listaContos[index]['texto'],
-                          maxLines: 4,                
+                          maxLines: 2,                
                           style: TextStyle(
                             color: Colors.grey[400],
                             fontSize: 14.0
@@ -100,14 +112,14 @@ class _TelaInicialState extends State<TelaInicial> {
                             Text(widget.listaContos[index]['curtidas'].toString(),
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                          color: Colors.grey[400],
+                          color: Color(0xffb34700),
                           fontSize: 18.0
                           ),
                         ),
                         
                         IconButton(
                           icon: Icon(Icons.thumb_up_alt_outlined,
-                            color: Colors.grey[400],
+                            color: Color(0xffb34700),
                           ),
                            onPressed: (){}
                            ),
@@ -119,14 +131,14 @@ class _TelaInicialState extends State<TelaInicial> {
                             Text(widget.listaContos[index]['comentarios'].toString(),
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                          color: Colors.grey[400],
+                          color: Color(0xffb34700),
                           fontSize: 18.0
                           ),
                         ),
 
                         IconButton(
                           icon: Icon(Icons.mode_comment_outlined,
-                            color: Colors.grey[400]
+                            color: Color(0xffb34700)
                           ),
                            onPressed: (){}
                            ),
@@ -135,7 +147,7 @@ class _TelaInicialState extends State<TelaInicial> {
 
                         IconButton(
                           icon: Icon(Icons.more_vert_outlined,
-                            color: Colors.grey[400],
+                            color: Color(0xffb34700),
                           ),
                            onPressed: (){}
                            ),
