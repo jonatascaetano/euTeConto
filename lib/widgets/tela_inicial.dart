@@ -74,7 +74,7 @@ class _TelaInicialState extends State<TelaInicial> {
           itemBuilder: (context, index) {
 
              initializeDateFormatting('pt_BR');
-             var formatador = DateFormat('d/M/y H:m');
+             var formatador = DateFormat('d/M/y H:mm');
              String dataFormatada = formatador.format( widget.listaContos[index]['data'].toDate() );
              print('data formatada ' + dataFormatada.toString());
 

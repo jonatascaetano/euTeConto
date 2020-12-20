@@ -116,7 +116,7 @@ class _ContoState extends State<Conto> {
                     dados['autor'] = snapshot.data['autor'];
                     dados['data'] = snapshot.data['data'];
                     initializeDateFormatting('pt_BR');
-                    var formatador = DateFormat('d/M/y H:m');
+                    var formatador = DateFormat('d/M/y H:mm');
                     String dataFormatada = formatador.format(dados['data'].toDate());
 
                     return Container(

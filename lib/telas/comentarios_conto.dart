@@ -45,7 +45,7 @@ class _ComentariosContoState extends State<ComentariosConto> {
       });
     }
      initializeDateFormatting('pt_BR');
-     var formatador = DateFormat('d/M/y H:m');
+     var formatador = DateFormat('d/M/y H:mm');
      String dataFormatada = formatador.format( widget.documentSnapshot.data()['data'].toDate() );
      print('data formatada ' + dataFormatada.toString());
 

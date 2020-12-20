@@ -14,7 +14,7 @@ class _NovoContoState extends State<NovoConto> {
   User user;
   String categoria;
   String urlImagem;
-
+  List<String> categorias = List();
   usuarioLogado()async{
     FirebaseAuth auth = FirebaseAuth.instance;
     user = auth.currentUser;
@@ -78,7 +78,10 @@ class _NovoContoState extends State<NovoConto> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   );
-                }else{          
+                }else{
+                  snapshot.data.docs.forEach((element) {
+                    categorias.add(element['categoria']);
+                  });
             return Container(
               margin: EdgeInsets.fromLTRB(16, 64, 16, 16 ),
               child: Column(
@@ -105,9 +108,9 @@ class _NovoContoState extends State<NovoConto> {
                     cursorColor: Color(0xffb34700),
                     controller: textoController,
                     style: TextStyle(color: Colors.white),
-                    maxLength: 6000,
-                    minLines: 1,
-                    maxLines: 30,
+                    maxLength: 6000,                  
+                    minLines: 10,
+                    maxLines: 10,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0) ),
                         counterStyle: TextStyle(
@@ -134,23 +137,28 @@ class _NovoContoState extends State<NovoConto> {
                     height: 30,
                     child: Expanded(
                     child: ListView.builder(
+                      
                     scrollDirection: Axis.horizontal,                 
-                    itemCount: snapshot.data.docs.length,
+                    itemCount: categorias.length,
                     itemBuilder: (context, index){
                       return Container(
                         height: 40,
                         child: FlatButton(                       
                             onPressed: (){
+                              
                               setState(() {
-                                categoria = snapshot.data.docs[index]['categoria'];
+                                categoria = categorias[index];
+                                categorias.removeAt(index);
+                                categorias.insert(1, categoria);
+                            
                               });
                             },
-                            child: Text(snapshot.data.docs[index]['categoria'],
+                            child: Text(categorias[index],
                               style: TextStyle(
-                                color: categoria == snapshot.data.docs[index]['categoria'] ?  Colors.black : Color(0xffb34700),
+                                color: categoria == categorias[index] ?  Colors.black : Color(0xffb34700),
                               ),
                             ),
-                            color: categoria == snapshot.data.docs[index]['categoria'] ?  Colors.white : Colors.black38,
+                            color: categoria == categorias[index] ?  Colors.white : Colors.black38,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                             )
@@ -168,6 +176,9 @@ class _NovoContoState extends State<NovoConto> {
                       children: [
                         RaisedButton(
                       child: Text('Publicar'),
+                      shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                            ),
                       color: Colors.grey[400],
                       onPressed: (){
                        if(tituloController.text.isNotEmpty && textoController.text.isNotEmpty){

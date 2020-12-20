@@ -17,35 +17,34 @@ class MeusComentarios extends StatefulWidget {
 
 class _MeusComentariosState extends State<MeusComentarios> {
 
-  Map<String, dynamic> comentarios = Map();
+    Map<String, dynamic> comentarios = Map();
 
-  int comentariosNum;
+    int comentariosNum;
 
-  comentariosNumero(idConto) async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('contos').doc(idConto).get();
-    setState(() {
-      comentariosNum = documentSnapshot.data()['comentarios'];
-    });
-  }
+    comentariosNumero(idConto) async {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('contos').doc(idConto).get();
+      setState(() {
+        comentariosNum = documentSnapshot.data()['comentarios'];
+      });
+    }
 
-String autor;
+  String autor;
 
-  recuperarUsuario(){
-    setState(() {
-      autor = FirebaseAuth.instance.currentUser.uid;
-    });
-  }
+    recuperarUsuario(){
+      setState(() {
+        autor = FirebaseAuth.instance.currentUser.uid;
+      });
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    recuperarUsuario();
-  }
+    @override
+    void initState() {
+      super.initState();
+      recuperarUsuario();
+    }
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(           
-              //padding: EdgeInsets.all(5.0),
               itemCount: widget.listaComentarios.length,
               separatorBuilder: (context, index) => Divider(
                 height: 5.0,
@@ -54,7 +53,7 @@ String autor;
               ),
               itemBuilder: (context, index){
                  initializeDateFormatting('pt_BR');
-                 var formatador = DateFormat('d/M/y H:m');
+                 var formatador = DateFormat('d/M/y H:mm');
                  String dataFormatada = formatador.format(widget.listaComentarios[index]['data'].toDate());
                  
                 return Container(
@@ -124,17 +123,17 @@ String autor;
                                                     child: Text('Cancelar')),
                                                 FlatButton(
                                                     onPressed: () {
-                                                      comentariosNumero(comentarios['conto']);
+                                                      comentariosNumero(widget.listaComentarios[index]['conto']);
                                                       if(comentariosNum!= null){
-                                                        FirebaseFirestore.instance.collection('comentarios').doc(autor).collection('comentarios').doc(comentarios['idComentario']).delete();
-                                                        FirebaseFirestore.instance.collection('contos').doc(comentarios['conto']).collection('comentarios').doc(comentarios['idComentario']).delete();
-                                                        FirebaseFirestore.instance.collection('contos').doc(comentarios['conto']).update({
+                                                        FirebaseFirestore.instance.collection('comentarios').doc(autor).collection('comentarios').doc(widget.listaComentarios[index].reference.id).delete();
+                                                        FirebaseFirestore.instance.collection('contos').doc(widget.listaComentarios[index]['conto']).collection('comentarios').doc(widget.listaComentarios[index].reference.id).delete();
+                                                        FirebaseFirestore.instance.collection('contos').doc(widget.listaComentarios[index]['conto']).update({
                                                           'comentarios' : comentariosNum - 1
                                                         });
-                                                        comentariosNumero(comentarios['conto']);
+                                                        comentariosNumero(widget.listaComentarios[index]['conto']);
                                                         Navigator.of(context).pop();
                                                       }else{
-                                                        FirebaseFirestore.instance.collection('comentarios').doc(autor).collection('comentarios').doc(comentarios['idComentario']).delete();
+                                                        FirebaseFirestore.instance.collection('comentarios').doc(autor).collection('comentarios').doc(widget.listaComentarios[index].reference.id).delete();
                                                         Navigator.of(context).pop();
                                                       }
                                                       
