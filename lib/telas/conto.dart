@@ -61,6 +61,48 @@ class _ContoState extends State<Conto> {
         });
   }
 
+  atualizarCurtida(List<dynamic> curtidasRecebida) {
+    print(
+        'tamanho da lista de curtidas: ' + curtidasRecebida.length.toString());
+    if (curtidasRecebida.length == 0) {
+      List<dynamic> curtidos = List();
+      curtidos = curtidasRecebida;
+      curtidos.add(user.uid);
+
+      FirebaseFirestore.instance
+          .collection('contos')
+          .doc(widget.id)
+          .update({'curtidas': curtidos});
+    } else {
+      for (dynamic idCurtidas in curtidasRecebida) {
+        if (idCurtidas == user.uid) {
+         curtido = true;
+        }
+      }
+      print('curtido resultado: ' + curtido.toString());
+      if (curtido == false) {
+        List<dynamic> curtidos = List();
+        curtidos = curtidasRecebida;
+        curtidos.add(user.uid);
+
+        FirebaseFirestore.instance
+            .collection('contos')
+            .doc(widget.id)
+            .update({'curtidas': curtidos});
+      } else {
+        List<dynamic> curtidos = List();
+        curtidos = curtidasRecebida;
+        curtidos.remove(user.uid);
+
+        FirebaseFirestore.instance
+            .collection('contos')
+            .doc(widget.id)
+            .update({'curtidas': curtidos});
+      }
+      curtido = false;
+    }
+  }
+
   User user;
 
   usuarioLogado()async{
@@ -201,51 +243,7 @@ class _ContoState extends State<Conto> {
                                               color: Color(0xffb34700),
                                             ),
                                             onPressed: () {
-                                              print('tamanho da lista de curtidas: ' + dados['curtidas'].length.toString() );
-                                              if(dados['curtidas'].length == 0){
-                                                List<dynamic> curtidos = List();
-                                                curtidos = dados['curtidas'];
-                                                curtidos.add(user.uid);
-
-                                                FirebaseFirestore.instance.collection('contos').doc(widget.id).update(
-                                                  {
-                                                    'curtidas' : curtidos
-                                                  }
-                                                );
-                                              }else{
-                                                for(dynamic idCurtidas in dados['curtidas']){
-                                                if (idCurtidas == user.uid){
-                                                  setState(() {
-                                                    curtido = true;
-                                                  });
-                                                } 
-                                              }
-                                              print('curtido resultado: ' + curtido.toString());
-                                              if(curtido == false){
-                                                List<dynamic> curtidos = List();
-                                                curtidos = dados['curtidas'];
-                                                curtidos.add(user.uid);
-
-                                                FirebaseFirestore.instance.collection('contos').doc(widget.id).update(
-                                                  {
-                                                    'curtidas' : curtidos
-                                                  }
-                                                );
-                                              }else{
-                                                List<dynamic> curtidos = List();
-                                                curtidos = dados['curtidas'];
-                                                curtidos.remove(user.uid);
-
-                                                FirebaseFirestore.instance.collection('contos').doc(widget.id).update(
-                                                  {
-                                                    'curtidas' : curtidos
-                                                  }
-                                                );
-                                              }
-                                              curtido = false;
-                                              
-                                             
-                                              }
+                                              atualizarCurtida(dados['curtidas']);
                                               
                                             }
                                             ),
