@@ -1,4 +1,5 @@
 import 'package:Confidence/telas/login.dart';
+import 'package:Confidence/telas/novo_conto.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Confidence/widgets/tela_biblioteca.dart';
@@ -28,7 +29,20 @@ class _BibliotecaState extends State<Biblioteca> {
   @override
   Widget build(BuildContext context) {
     return user == null ?
-      Login() : TelaBiblioteca();
-    
+      Login() : Scaffold(
+        body: TelaBiblioteca(user.uid),
+        floatingActionButton: FloatingActionButton(
+          mini: true,
+          child: Icon(Icons.text_fields,
+            color: Color(0xffb34700),
+          ),
+          backgroundColor: Colors.black38,
+          onPressed: (){
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context)=> NovoConto())
+            );
+          }
+          ),
+      );    
   }
 }

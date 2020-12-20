@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:Confidence/abas/biblioteca.dart';
 import 'package:Confidence/telas/cadastro.dart';
 import 'package:Confidence/telas/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';

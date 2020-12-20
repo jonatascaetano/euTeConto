@@ -27,6 +27,8 @@ class _ComentariosState extends State<Comentarios> {
   @override
   Widget build(BuildContext context) {
      return user == null ?
-      Login() : TelaComentarios();
+      Login() : Container(       
+        child: TelaComentarios(),
+      );
   }
 }

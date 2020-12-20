@@ -11,25 +11,30 @@ class _InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {   
      return Container(
+       color:  Color(0xff0f1b1b),
        child: StreamBuilder<QuerySnapshot>(
-       stream: FirebaseFirestore.instance.collection('contos').snapshots(),
+       stream: FirebaseFirestore.instance.collection('contos').orderBy('data').snapshots(),
        builder: (context, snapshot){
          switch(snapshot.connectionState){
           case ConnectionState.none:
           case ConnectionState.waiting:
-            return Center(
-              child: CircularProgressIndicator(),
+             return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Color(0xffb34700),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xffb34700))
+              ),
+              
             );
             break;
           default:
-          if(!snapshot.hasData){
-            return Center(
-              child: Text('Não existem contos',
-                style: TextStyle(fontSize: 32, color: Colors.grey),
-              ),
-            );
-          }else{
-            return TelaInicial(snapshot.data.docs);
+          if(snapshot.data.docs.length ==0 ){
+                  return Center(
+                    child: Text('Nada encontrado',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  );
+                }else{  
+            return TelaInicial(snapshot.data.docs.reversed.toList());
           }           
         }
        }
