@@ -29,11 +29,6 @@ class _NovoComentarioState extends State<NovoComentario> {
   salvarComentario(){
    comentariosNumero();
 
-   initializeDateFormatting('pt_BR');
-   var formatador = DateFormat('d/M/y');
-   String dataFormatada = formatador.format(DateTime.now());
-
-
    String autor = FirebaseAuth.instance.currentUser.uid;
    FirebaseFirestore.instance.collection('contos').doc(widget.idConto).collection('comentarios').add({
       'texto' : comentarioController.text,

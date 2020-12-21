@@ -105,6 +105,7 @@ class _ContoState extends State<Conto> {
   inserirComentario(BuildContext context, id, titulo){
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context){
         return BottomSheet(
           onClosing: (){},
@@ -115,7 +116,10 @@ class _ContoState extends State<Conto> {
                 padding: EdgeInsets.all(8),
                 color: Color(0xff262626),                                 
                 width: MediaQuery.of(context).size.width,
-                child: NovoComentario(id, titulo),
+                child: Padding(padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: NovoComentario(id, titulo),
+                ),
               ),
               ),
               );
@@ -391,7 +395,7 @@ class _ContoState extends State<Conto> {
                                     : Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: comentariosLista
+                                        children: comentariosLista.reversed.toList()
                                             .map((doc) => ComentariosConto(
                                                 doc, dados['autor'])) 
                                             .toList(),
