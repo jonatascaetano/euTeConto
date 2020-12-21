@@ -47,7 +47,7 @@ class _MeusComentariosState extends State<MeusComentarios> {
     return ListView.separated(           
               itemCount: widget.listaComentarios.length,
               separatorBuilder: (context, index) => Divider(
-                height: 5.0,
+                height: 1.0,
                 color: Colors.black,
                 thickness: 1.0,
               ),

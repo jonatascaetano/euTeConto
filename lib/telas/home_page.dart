@@ -39,11 +39,12 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
              return <Widget> [
                SliverAppBar(
-                elevation: 50,
                 backgroundColor: Color(0xff0f1b1b),                  
-                toolbarHeight: 30,                
-                flexibleSpace: FlexibleSpaceBar(                 
-                  collapseMode: CollapseMode.none,                 
+                toolbarHeight: 30.0,
+                floating: false,
+                pinned: false,
+                snap: false,              
+                flexibleSpace: FlexibleSpaceBar(                             
                   titlePadding: EdgeInsets.zero,
                   title: Padding(padding: EdgeInsets.only(left: 16),
                     child: Text(
@@ -84,22 +85,20 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                     unselectedLabelColor: Color(0xffb34700),                                                         
                     tabs:                      
                     [
-                      Tab(                
-                        //child: CircleAvatar(child: Icon(Icons.local_library_outlined), backgroundColor: Color(0xff0f1b1b),),                               
+                      Tab(                                             
                         icon: Icon(Icons.local_library_outlined, ),                      
                       ),
-                      Tab(      
-                        //child: CircleAvatar(child: Icon(Icons.mode_outlined), backgroundColor: Color(0xff0f1b1b),),                  
+                      Tab(                    
                         icon: Icon(Icons.mode_outlined, )                       
                       ),
                       Tab(   
-                        //child: CircleAvatar(child: Icon(Icons.mode_comment_outlined), backgroundColor: Color(0xff0f1b1b),),                     
                         icon: Icon(Icons.mode_comment_outlined),                     
                       )
                     ],
                   ),
                 ),
-                pinned: true, 
+                pinned: true,
+                floating: false,                
               ),             
              ];
            },
@@ -129,16 +128,25 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => _tabBar.preferredSize.height * 1.5;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => _tabBar.preferredSize.height * 1.5;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container( 
       padding: EdgeInsets.only(top: 8, bottom: 4),   
       color:  Color(0xff0f1b1b),     
-      child: _tabBar,     
+      child: Column(
+        children: [
+          _tabBar,
+          Divider(
+                height: 1.0,
+                color: Colors.black,
+                thickness: 1.0,
+              ),
+        ],
+      ),     
     );
   }
 

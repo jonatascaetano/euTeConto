@@ -67,19 +67,16 @@ class _TelaInicialState extends State<TelaInicial> {
           padding: EdgeInsets.only(top: 5.0),
           itemCount: widget.listaContos.length,
           separatorBuilder: (context, index) => Divider(
-                height: 5.0,
+                height: 1.0,
                 color: Colors.black,
                 thickness: 1.0,
               ),
           itemBuilder: (context, index) {
-
              initializeDateFormatting('pt_BR');
              var formatador = DateFormat('d/M/y H:mm');
              String dataFormatada = formatador.format( widget.listaContos[index]['data'].toDate() );
-             print('data formatada ' + dataFormatada.toString());
-
             return Container(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.only(left: 12, right: 12),
               color: Color(0xff0f1b1b),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -135,7 +132,7 @@ class _TelaInicialState extends State<TelaInicial> {
                       children: [
                         Text(
                           widget.listaContos[index]['texto'],
-                          maxLines: 2,
+                          maxLines: 3,
                           style: TextStyle(
                               color: Colors.grey[400], fontSize: 14.0),
                         ),
