@@ -56,9 +56,6 @@ class _NovoComentarioState extends State<NovoComentario> {
       comentariosNumero();
       setState(() {
       comentarioController.clear();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context)=> Conto(widget.idConto) )
-      );
     });
     });
      
@@ -66,7 +63,8 @@ class _NovoComentarioState extends State<NovoComentario> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return SingleChildScrollView(
+      child: TextField(
       cursorColor: Color(0xffb34700),
       controller: comentarioController,
       style: TextStyle(color: Colors.white),
@@ -89,6 +87,7 @@ class _NovoComentarioState extends State<NovoComentario> {
                  salvarComentario();
                }
           })),
+    ),
     );
   }
 }

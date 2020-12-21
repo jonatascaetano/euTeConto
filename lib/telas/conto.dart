@@ -19,17 +19,16 @@ class _ContoState extends State<Conto> {
   TextEditingController comentarioController = TextEditingController();
   bool curtido= false;
 
-  Future recuperarConto() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  recuperarComentariosConto(){
+    FirebaseFirestore.instance
         .collection('contos')
         .doc(widget.id)
         .collection('comentarios')
         .orderBy('data')
-        .get();
+        .snapshots().listen((event) {
+          comentariosLista = event.docs;
+        });
 
-    setState(() {
-      comentariosLista = querySnapshot.docs;
-    });
   }
 
    excluirConto(contoId) {
@@ -103,6 +102,29 @@ class _ContoState extends State<Conto> {
     }
   }
 
+  inserirComentario(BuildContext context, id, titulo){
+    showModalBottomSheet(
+      context: context,
+      builder: (context){
+        return BottomSheet(
+          onClosing: (){},
+          builder: (context){            
+              return Container(
+                child: SingleChildScrollView(
+                child: Container(
+                padding: EdgeInsets.all(8),
+                color: Color(0xff262626),                                 
+                width: MediaQuery.of(context).size.width,
+                child: NovoComentario(id, titulo),
+              ),
+              ),
+              );
+          },
+        );
+      }
+      );
+  }
+
   User user;
 
   usuarioLogado()async{
@@ -114,7 +136,7 @@ class _ContoState extends State<Conto> {
   @override
   void initState() {
     super.initState();
-    recuperarConto();
+    recuperarComentariosConto();
     usuarioLogado();
   }
 
@@ -374,14 +396,19 @@ class _ContoState extends State<Conto> {
                                                 doc, dados['autor'])) 
                                             .toList(),
                                       ),
-                                Container(
-                                  //margin: EdgeInsets.all(4),
-                                  padding: EdgeInsets.all(8),
-                                  color: Color(0xff262626),                                 
-                                  width: MediaQuery.of(context).size.width,
-                                  child: NovoComentario(
-                                      snapshot.data.reference.id, dados['titulo']),
-                                ),
+                                GestureDetector(
+                                  child: Padding(padding: EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                          'Comentar',
+                                          style: TextStyle(
+                                              color: Color(0xffb34700),
+                                              fontSize: 18.0),
+                                        ),
+                                  ),
+                                  onTap: (){
+                                    inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
+                                  },
+                                )
                               ],
                             ),
                           ),
@@ -389,6 +416,6 @@ class _ContoState extends State<Conto> {
                   }
               }
             })
-            );
+     );
   }
 }
