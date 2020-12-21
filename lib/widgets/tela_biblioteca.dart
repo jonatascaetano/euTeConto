@@ -37,13 +37,22 @@ class _TelaBibliotecaState extends State<TelaBiblioteca> {
             );
             break;
           default:
-          if(snapshot.data.docs.length ==0 ){
+          List<QueryDocumentSnapshot> queryDocumentSnapshot = List();
+                  snapshot.data.docs.forEach((element) {
+                    if(element.data()['autor'] == widget.uid){
+                      queryDocumentSnapshot.add(element);
+                      }
+                  });
+          if(queryDocumentSnapshot.length ==0 ){
+            
+            print('nada encontrado');
                   return Center(
                     child: Text('Nada encontrado',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   );
-                }else{  
+                }else{
+                  print('encontrado dados' + snapshot.data.docs.length.toString() );  
                   List<QueryDocumentSnapshot> queryDocumentSnapshot = List();
                   snapshot.data.docs.forEach((element) {
                     if(element.data()['autor'] == widget.uid){

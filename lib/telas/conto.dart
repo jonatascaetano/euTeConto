@@ -296,7 +296,81 @@ class _ContoState extends State<Conto> {
                                           color: Color(0xffb34700),
                                         ),
                                         onPressed: () {
-                                          dados['autor'] != user.uid ?
+                                         user  == null ? showDialog(
+                                              context: (context),
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Denunciar',
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                  content: TextField(
+                                                    cursorColor:
+                                                        Color(0xffb34700),
+                                                    controller:
+                                                        comentarioController,
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                    maxLength: 140,
+                                                    decoration: InputDecoration(
+                                                      counterStyle: TextStyle(
+                                                          color: Colors.black),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0)),
+                                                      labelText: 'motivo',
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black),
+                                                      
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    FlatButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child:
+                                                            Text('Cancelar')),
+                                                    FlatButton(
+                                                        onPressed: () {
+                                                          if (comentarioController
+                                                              .text
+                                                              .isNotEmpty) {
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'denuncias')
+                                                                .add({
+                                                              'autor': dados[
+                                                                  'autor'],
+                                                              'texto': dados[
+                                                                  'texto'],
+                                                              'idConto':
+                                                                  snapshot
+                                                                      .data
+                                                                      .reference
+                                                                      .id,
+                                                              'motivo':
+                                                                  comentarioController
+                                                                      .text,
+                                                              'tipo': 'conto',
+                                                              'data': DateTime.now(),
+                                                              'status' : 'ativo',
+                                                            });
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }
+                                                        },
+                                                        child: Text('Enviar')),
+                                                  ],
+                                                );
+                                              }
+                                              ) : dados['autor'] != user.uid ?
                                           showDialog(
                                               context: (context),
                                               builder: (context) {
@@ -400,6 +474,7 @@ class _ContoState extends State<Conto> {
                                                 doc, dados['autor'])) 
                                             .toList(),
                                       ),
+                                user != null ?
                                 GestureDetector(
                                   child: Padding(padding: EdgeInsets.only(bottom: 16),
                                     child: Text(
@@ -412,7 +487,7 @@ class _ContoState extends State<Conto> {
                                   onTap: (){
                                     inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
                                   },
-                                )
+                                ) : Container()
                               ],
                             ),
                           ),

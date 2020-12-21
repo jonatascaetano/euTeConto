@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Color(0xff272727),
+      backgroundColor: Color(0xff0f1b1b),
       body: Form(
         key: _formKey,
       child: SingleChildScrollView(
@@ -64,7 +64,10 @@ class _LoginState extends State<Login> {
                   labelStyle: TextStyle(
                     color: Colors.white
                   ),
-                  suffixIcon: Icon(Icons.email)
+                  suffixIcon: Icon(Icons.email, color: Colors.black),
+                  suffixStyle: TextStyle(
+                    color: Colors.black,
+                  )
                 ),
               ),
               TextFormField(
@@ -82,13 +85,17 @@ class _LoginState extends State<Login> {
                     color: Colors.white
                   ),
                   suffixIcon: IconButton(
-                    icon: senhaSecreta ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    icon: senhaSecreta ? Icon(Icons.visibility_off, color: Colors.black) : Icon(Icons.visibility, color: Colors.black),                   
                      onPressed: (){
                       setState(() {
                          senhaSecreta = !senhaSecreta;
                       });
                      }
-                     )
+                     ),
+                   suffixStyle: TextStyle(
+                    color: Colors.black,
+                  )  
+
                 ),
               ),
               SizedBox(height: 8,),

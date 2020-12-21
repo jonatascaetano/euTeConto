@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:Confidence/telas/home_page.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -20,7 +22,14 @@ class _CadastroState extends State<Cadastro> {
       email: emailController.text,
        password: senhaController.text
        ).then((value){
+         FirebaseFirestore.instance.collection('usuarios').doc(value.user.uid).set({
+           'situação' : 'ativa'
+         });
          Navigator.of(context).pop();
+         Navigator.of(context).pushReplacement(
+           MaterialPageRoute(builder: (context)=> HomePage())
+         );
+         
        }).catchError((error){
         _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Erro ao realizar cadastro')));
          
@@ -31,7 +40,7 @@ class _CadastroState extends State<Cadastro> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor:  Color(0xff272727),
+      backgroundColor:  Color(0xff0f1b1b),
       appBar: AppBar(
         title: Text('Cadastro'),
       ),
@@ -57,7 +66,10 @@ class _CadastroState extends State<Cadastro> {
                   labelStyle: TextStyle(
                     color: Colors.white
                   ),
-                  suffixIcon: Icon(Icons.email)
+                   suffixIcon: Icon(Icons.email, color: Colors.black),
+                  suffixStyle: TextStyle(
+                    color: Colors.black,
+                  )
                 ),
               ),
               TextFormField(
@@ -75,13 +87,16 @@ class _CadastroState extends State<Cadastro> {
                     color: Colors.white
                   ),
                   suffixIcon: IconButton(
-                    icon: senhaSecreta ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    icon: senhaSecreta ? Icon(Icons.visibility_off, color: Colors.black) : Icon(Icons.visibility, color: Colors.black),                   
                      onPressed: (){
                       setState(() {
                          senhaSecreta = !senhaSecreta;
                       });
                      }
-                     )
+                     ),
+                   suffixStyle: TextStyle(
+                    color: Colors.black,
+                  )  
                 ),
               ),
               SizedBox(height: 8,),

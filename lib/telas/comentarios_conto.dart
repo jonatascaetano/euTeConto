@@ -35,11 +35,17 @@ class _ComentariosContoState extends State<ComentariosConto> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.documentSnapshot.data()['autor'] == widget.autorConto) {
+    if(user != null){
+      if (widget.documentSnapshot.data()['autor'] == widget.autorConto) {
       setState(() {
         autor = 'Autor';
       });
     } else {
+      setState(() {
+        autor = 'Anônimo';
+      });
+    }
+    }else if (user == null){
       setState(() {
         autor = 'Anônimo';
       });
@@ -75,7 +81,7 @@ class _ComentariosContoState extends State<ComentariosConto> {
                dataFormatada.toString(),
                 style: TextStyle(color: Color(0xffb34700), fontSize: 14.0),
               ),
-              widget.documentSnapshot.data()['autor'] != user.uid ? Expanded(
+              user == null ? Expanded(
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +150,79 @@ class _ComentariosContoState extends State<ComentariosConto> {
                       }
                       ),
                 ],
-              )) : Container(),
+              )
+              ) :  widget.documentSnapshot.data()['autor'] != user.uid ? 
+                Expanded(
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                      icon: Icon(
+                        Icons.more_vert_outlined,
+                        color: Color(0xffb34700),
+                      ),
+                      onPressed: (){
+                        showDialog(
+                            context: (context),
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Denunciar comentario',
+                                  style: TextStyle(
+                                    fontSize: 14
+                                  ),
+                                ),
+                                content: TextField(
+                                  cursorColor: Color(0xffb34700),
+                                  controller: comentarioController,
+                                  style: TextStyle(color: Colors.black),
+                                  maxLength: 140,
+                                  decoration: InputDecoration(
+                                    counterStyle:
+                                        TextStyle(color: Colors.black),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0) ),
+                                    labelText: 'motivo',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    
+                                  ),
+                                ),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancelar')),
+                                  FlatButton(
+                                      onPressed: () {
+                                        if(comentarioController.text.isNotEmpty){
+                                          FirebaseFirestore.instance
+                                            .collection('denuncias')
+                                            .add({
+                                          'autor': widget.documentSnapshot
+                                              .data()['autor'],
+                                          'texto': widget.documentSnapshot
+                                              .data()['texto'],
+                                          'conto': widget.documentSnapshot
+                                              .data()['conto'],
+                                          'idComentario': widget.documentSnapshot.reference.id,                                         
+                                          'motivo' : comentarioController.text,
+                                          'tipo' : 'comentario',
+                                          'data': DateTime.now(),
+                                          'status' : 'ativo',   
+                                        });
+                                        Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Text('Enviar')),
+                                ],
+                              );
+                            }
+                            );
+                      }
+                      ),
+                ],
+              )
+              ) : Container()
             ],
           ),
           
