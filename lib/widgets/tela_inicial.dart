@@ -48,10 +48,16 @@ class _TelaInicialState extends State<TelaInicial> {
   }
 
   User user;
+  bool logado= false;
 
   usuarioLogado() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     user = auth.currentUser;
+    if(user != null){
+      setState(() {
+      logado = true;
+    });
+    }
   }
 
   @override
@@ -193,8 +199,12 @@ class _TelaInicialState extends State<TelaInicial> {
                             color: Color(0xffb34700),
                           ),
                           onPressed: () {
-                            widget.listaContos[index]['autor'] != user.uid
-                                ? showDialog(
+                           if( user != null){
+                             if(widget.listaContos[index]['autor'] == user.uid){
+                                 excluirConto(
+                                    widget.listaContos[index].reference.id);
+                                    }else if (widget.listaContos[index]['autor'] != user.uid){                                                                       
+                                         showDialog(
                                     context: (context),
                                     builder: (context) {
                                       return AlertDialog(
@@ -256,9 +266,76 @@ class _TelaInicialState extends State<TelaInicial> {
                                               child: Text('Enviar')),
                                         ],
                                       );
-                                    })
-                                : excluirConto(
-                                    widget.listaContos[index].reference.id);
+                                    }
+                                    );
+                                      }
+                           }else if(user == null){
+                                  showDialog(
+                                    context: (context),
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Denunciar',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        content: TextField(
+                                          cursorColor: Color(0xffb34700),
+                                          controller: comentarioController,
+                                          style: TextStyle(color: Colors.black),
+                                          maxLength: 140,
+                                          decoration: InputDecoration(
+                                            counterStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                            labelText: 'motivo',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancelar')),
+                                          FlatButton(
+                                              onPressed: () {
+                                                if (comentarioController
+                                                    .text.isNotEmpty) {
+                                                  FirebaseFirestore.instance
+                                                      .collection('denuncias')
+                                                      .add({
+                                                    'autor': widget
+                                                            .listaContos[index]
+                                                        ['autor'],
+                                                    'texto': widget
+                                                            .listaContos[index]
+                                                        ['texto'],
+                                                    'idConto': widget
+                                                        .listaContos[index]
+                                                        .reference
+                                                        .id,
+                                                    'motivo':
+                                                        comentarioController
+                                                            .text,
+                                                    'tipo': 'conto',
+                                                    'data': DateTime.now(),
+                                                    'status' : 'ativo',
+                                                        
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                              child: Text('Enviar')),
+                                        ],
+                                      );
+                                    }
+                                    );
+                                    }
+                                     
                           }),
                     ],
                   ),
