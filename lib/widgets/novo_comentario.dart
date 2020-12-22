@@ -49,6 +49,7 @@ class _NovoComentarioState extends State<NovoComentario> {
       setState(() {
       comentarioController.clear();
     });
+      Navigator.of(context).pop();
     });
      
   }
@@ -57,6 +58,7 @@ class _NovoComentarioState extends State<NovoComentario> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: TextField(
+      autofocus: true,
       cursorColor: Color(0xffb34700),
       controller: comentarioController,
       style: TextStyle(color: Colors.white),

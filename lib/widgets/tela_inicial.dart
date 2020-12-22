@@ -102,12 +102,12 @@ class _TelaInicialState extends State<TelaInicial> {
                       Text(
                         'em ',
                         maxLines: 1,
-                        style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
                       ),
                       Text(
                         widget.listaContos[index]['categoria'],
                         maxLines: 1,
-                        style: TextStyle(color: Colors.blue, fontSize: 18.0),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 18.0),
                       ),
                     ],
                   ),
@@ -144,7 +144,7 @@ class _TelaInicialState extends State<TelaInicial> {
                         ),
                         Text(
                           'ver mais',
-                          style: TextStyle(color: Colors.blue, fontSize: 14.0),
+                          style: TextStyle(color: Colors.blue[800], fontSize: 14.0),
                         ),
                       ],
                     ),

@@ -1,6 +1,7 @@
 import 'package:Confidence/abas/biblioteca.dart';
 import 'package:Confidence/abas/comentarios.dart';
 import 'package:Confidence/abas/inicio.dart';
+import 'package:Confidence/telas/novo_conto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,19 +41,19 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
              return <Widget> [
                SliverAppBar(
                 backgroundColor: Color(0xff0f1b1b),                  
-                toolbarHeight: 30.0,
+                toolbarHeight: 40.0,
                 floating: false,
                 pinned: false,
                 snap: false,              
                 flexibleSpace: FlexibleSpaceBar(                             
                   titlePadding: EdgeInsets.zero,
-                  title: Padding(padding: EdgeInsets.only(left: 16),
+                  title: Padding(padding: EdgeInsets.only(left: 16, bottom: 8),
                     child: Text(
                         "Eu te conto",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24.0,
-                          fontStyle: FontStyle.italic,                          
+                          //fontStyle: FontStyle.italic,                          
                         )
                     ),
                   )          
@@ -63,6 +64,16 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                      color: Colors.white,
                      onPressed: (){}
                      ),
+
+                     user != null ? IconButton(
+                     icon: Icon(Icons.add_comment_outlined),
+                     color: Color(0xffb34700),
+                     onPressed: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context)=> NovoConto())
+                        );
+                      }
+                     ) : Container(),
 
                     user != null ?  IconButton(
                      icon: Icon(Icons.exit_to_app),
@@ -128,25 +139,25 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 
   @override
-  double get minExtent => _tabBar.preferredSize.height * 1.5;
+  double get minExtent => _tabBar.preferredSize.height;
   @override
-  double get maxExtent => _tabBar.preferredSize.height * 1.5;
+  double get maxExtent => _tabBar.preferredSize.height;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container( 
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 1.0
+          )
+        ),
+        color:  Color(0xff0f1b1b), 
+      ),
       padding: EdgeInsets.only(top: 8, bottom: 4),   
-      color:  Color(0xff0f1b1b),     
-      child: Column(
-        children: [
-          _tabBar,
-          Divider(
-                height: 1.0,
-                color: Colors.black,
-                thickness: 1.0,
-              ),
-        ],
-      ),     
+         
+      child: _tabBar 
     );
   }
 

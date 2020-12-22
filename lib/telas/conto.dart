@@ -18,6 +18,7 @@ class _ContoState extends State<Conto> {
   List<DocumentSnapshot> comentariosLista = List();
   TextEditingController comentarioController = TextEditingController();
   bool curtido= false;
+  
 
   recuperarComentariosConto(){
     FirebaseFirestore.instance
@@ -211,12 +212,12 @@ class _ContoState extends State<Conto> {
                                     Text(
                                       'em ',
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                                      style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
                                     ),
                                     Text(
                                       dados['categoria'],
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.blue, fontSize: 18.0),
+                                      style: TextStyle(color: Colors.grey[600], fontSize: 18.0),
                                     ),
                                   ],
                                 ),
