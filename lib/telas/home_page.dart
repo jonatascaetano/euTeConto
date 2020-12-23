@@ -1,6 +1,7 @@
 import 'package:Confidence/abas/biblioteca.dart';
 import 'package:Confidence/abas/comentarios.dart';
 import 'package:Confidence/abas/inicio.dart';
+import 'package:Confidence/abas/salvos.dart';
 import 'package:Confidence/telas/novo_conto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
       body: Container(
         margin: EdgeInsets.only(top: 24.0),
         child: DefaultTabController(
-        length: 3,
+        length: 4,
          child: NestedScrollView(          
            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
              return <Widget> [
@@ -102,6 +103,9 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                       Tab(                    
                         icon: Icon(Icons.mode_outlined, )                       
                       ),
+                      Tab(                    
+                        icon: Icon(Icons.bookmark_border, )                       
+                      ),
                       Tab(   
                         icon: Icon(Icons.mode_comment_outlined),                     
                       )
@@ -119,7 +123,8 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                 children: [
                   Inicio(),
                   Biblioteca(),
-                  Comentarios(),
+                  Salvos(),
+                  Comentarios(),                 
                 ]
                 ),
                 )

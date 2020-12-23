@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:Confidence/telas/conto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,16 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class TelaInicial extends StatefulWidget {
-  List<QueryDocumentSnapshot> listaContos;
+class TelaListaSalvos extends StatefulWidget {
 
-  TelaInicial(this.listaContos);
+  List<DocumentSnapshot> listaContos;
+
+  TelaListaSalvos(this.listaContos);
 
   @override
-  _TelaInicialState createState() => _TelaInicialState();
+  _TelaListaSalvosState createState() => _TelaListaSalvosState();
 }
 
-class _TelaInicialState extends State<TelaInicial> {
+class _TelaListaSalvosState extends State<TelaListaSalvos> {
+
   TextEditingController comentarioController = TextEditingController();
   List<String> listaSalvos = List();
 
