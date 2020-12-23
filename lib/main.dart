@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Confidence/telas/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +43,19 @@ class _MyHomePageState extends State<MyHomePage> {
         switch(snapshot.connectionState){
           case ConnectionState.none:
           case ConnectionState.waiting:
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return
+              Container(
+                color:  Color(0xff0f1b1b),
+                child: Center(              
+                  child: Text('Eu te conto',                  
+                    style: TextStyle(
+                      decoration: TextDecoration.none,
+                      color: Colors.white,
+                      fontSize: 30
+                    ),                  
+                  ),
+                ),
+              );
             break;
           default:
             return HomePage();  
