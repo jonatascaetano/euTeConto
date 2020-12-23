@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,

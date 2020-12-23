@@ -55,6 +55,7 @@ class _LoginState extends State<Login> {
                 controller: emailController,
                 validator: (texto){
                   if(texto.isEmpty || !texto.contains('@')) return 'Email inválido';
+                  return null;
                 },               
                 style: TextStyle(
                   color: Colors.white
@@ -74,6 +75,7 @@ class _LoginState extends State<Login> {
                 controller: senhaController,
                 validator: (texto){
                   if(texto.isEmpty || texto.length < 6) return 'Senha inválida';
+                  return null;
                 },
                 style: TextStyle(
                   color: Colors.white

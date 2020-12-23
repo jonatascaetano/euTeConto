@@ -1,8 +1,8 @@
 import 'package:Confidence/telas/tela_lista_salvos.dart';
-import 'package:Confidence/widgets/tela_inicial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TelaSalvo extends StatefulWidget {
 
   String uid;

@@ -2,6 +2,7 @@ import 'package:Confidence/widgets/tela_inicial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TelaBiblioteca extends StatefulWidget {
 
   String uid;

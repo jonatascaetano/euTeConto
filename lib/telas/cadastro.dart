@@ -57,6 +57,7 @@ class _CadastroState extends State<Cadastro> {
                 controller: emailController,
                 validator: (texto){
                   if(texto.isEmpty || !texto.contains('@')) return 'Email inválido';
+                  return null;
                 },
                 style: TextStyle(
                   color: Colors.white
@@ -76,6 +77,7 @@ class _CadastroState extends State<Cadastro> {
                 controller: senhaController,
                 validator: (texto){
                   if(texto.isEmpty || texto.length < 6) return 'Senha inválida';
+                  return null;
                 },
                 style: TextStyle(
                   color: Colors.white
