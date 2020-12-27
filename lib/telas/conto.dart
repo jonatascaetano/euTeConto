@@ -218,7 +218,7 @@ class _ContoState extends State<Conto> {
                                     Text(
                                       dados['categoria'],
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.grey[600], fontSize: 18.0),
+                                      style: TextStyle(color: Colors.blue[800], fontSize: 18.0),
                                     ),
                                   ],
                                 ),

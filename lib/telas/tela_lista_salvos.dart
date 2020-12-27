@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+// ignore: must_be_immutable
 class TelaListaSalvos extends StatefulWidget {
 
   List<DocumentSnapshot> listaContos;
@@ -152,7 +153,7 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                       Text(
                         widget.listaContos[index]['categoria'],
                         maxLines: 1,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 18.0),
+                        style: TextStyle(color: Colors.blue[800], fontSize: 18.0),
                       ),
 
                      

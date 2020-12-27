@@ -3,6 +3,7 @@ import 'package:Confidence/abas/comentarios.dart';
 import 'package:Confidence/abas/inicio.dart';
 import 'package:Confidence/abas/salvos.dart';
 import 'package:Confidence/telas/novo_conto.dart';
+import 'package:Confidence/widgets/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +65,13 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                    IconButton(
                      icon: Icon(Icons.search_rounded),
                      color: Colors.white,
-                     onPressed: (){}
+                     onPressed: ()async{
+                       String retorno = await showSearch(
+                         context: context,
+                         delegate: Search(),
+                        );
+                        print(retorno);
+                      }
                      ),
 
                      user != null ? IconButton(

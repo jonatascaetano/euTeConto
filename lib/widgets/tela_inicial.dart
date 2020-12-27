@@ -152,7 +152,7 @@ class _TelaInicialState extends State<TelaInicial> {
                       Text(
                         widget.listaContos[index]['categoria'],
                         maxLines: 1,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 18.0),
+                        style: TextStyle(color: Colors.blue[800], fontSize: 18.0),
                       ),
 
                      
@@ -204,10 +204,9 @@ class _TelaInicialState extends State<TelaInicial> {
                   SizedBox(
                     height: 8,
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Row(
+
+                  user != null ?
+                        Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
@@ -397,7 +396,193 @@ class _TelaInicialState extends State<TelaInicial> {
 
                           
                     ],
+                  ) 
+                  
+                  : 
+
+                      Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            widget.listaContos[index]['curtidas'].length.toString(),
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                                color: Color(0xffb34700), fontSize: 18.0),
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.thumb_up_alt_outlined,
+                                color: Color(0xffb34700),
+                              ),
+                              onPressed: () {}),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            widget.listaContos[index]['comentarios'].toString(),
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                                color: Color(0xffb34700), fontSize: 18.0),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.mode_comment_outlined,
+                                  color: Color(0xffb34700)),
+                              onPressed: () {}),
+                        ],
+                      ),
+
+                      IconButton(
+                          icon: Icon(
+                            Icons.more_vert_outlined,
+                            color: Color(0xffb34700),
+                          ),
+                          onPressed: () {
+                           if( user != null){
+                             if(widget.listaContos[index]['autor'] == user.uid){
+                                 excluirConto(
+                                    widget.listaContos[index].reference.id);
+                                    }else if (widget.listaContos[index]['autor'] != user.uid){                                                                       
+                                         showDialog(
+                                    context: (context),
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Denunciar',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        content: TextField(
+                                          cursorColor: Color(0xffb34700),
+                                          controller: comentarioController,
+                                          style: TextStyle(color: Colors.black),
+                                          maxLength: 140,
+                                          decoration: InputDecoration(
+                                            counterStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                            labelText: 'motivo',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancelar')),
+                                          FlatButton(
+                                              onPressed: () {
+                                                if (comentarioController
+                                                    .text.isNotEmpty) {
+                                                  FirebaseFirestore.instance
+                                                      .collection('denuncias')
+                                                      .add({
+                                                    'autor': widget
+                                                            .listaContos[index]
+                                                        ['autor'],
+                                                    'texto': widget
+                                                            .listaContos[index]
+                                                        ['texto'],
+                                                    'idConto': widget
+                                                        .listaContos[index]
+                                                        .reference
+                                                        .id,
+                                                    'motivo':
+                                                        comentarioController
+                                                            .text,
+                                                    'tipo': 'conto',
+                                                    'data': DateTime.now(),
+                                                    'status' : 'ativo',
+                                                        
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                              child: Text('Enviar')),
+                                        ],
+                                      );
+                                    }
+                                    );
+                                      }
+                           }else if(user == null){
+                                  showDialog(
+                                    context: (context),
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Denunciar',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        content: TextField(
+                                          cursorColor: Color(0xffb34700),
+                                          controller: comentarioController,
+                                          style: TextStyle(color: Colors.black),
+                                          maxLength: 140,
+                                          decoration: InputDecoration(
+                                            counterStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                            labelText: 'motivo',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancelar')),
+                                          FlatButton(
+                                              onPressed: () {
+                                                if (comentarioController
+                                                    .text.isNotEmpty) {
+                                                  FirebaseFirestore.instance
+                                                      .collection('denuncias')
+                                                      .add({
+                                                    'autor': widget
+                                                            .listaContos[index]
+                                                        ['autor'],
+                                                    'texto': widget
+                                                            .listaContos[index]
+                                                        ['texto'],
+                                                    'idConto': widget
+                                                        .listaContos[index]
+                                                        .reference
+                                                        .id,
+                                                    'motivo':
+                                                        comentarioController
+                                                            .text,
+                                                    'tipo': 'conto',
+                                                    'data': DateTime.now(),
+                                                    'status' : 'ativo',
+                                                        
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                              child: Text('Enviar')),
+                                        ],
+                                      );
+                                    }
+                                    );
+                                    }
+                                     
+                          }),
+
+                          
+                    ],
                   ),
+              
                   SizedBox(
                     height: 8,
                   ),
