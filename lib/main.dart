@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:Confidence/telas/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,9 @@ import 'dart:async';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
+ 
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<FirebaseApp> _firebaseApp  = Firebase.initializeApp();
+  
 
   @override
   Widget build(BuildContext context) {

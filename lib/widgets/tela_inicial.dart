@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:Confidence/telas/conto.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -103,28 +104,73 @@ class _TelaInicialState extends State<TelaInicial> {
     }
   }
 
+  AdmobInterstitial interstitialAd;
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('Novo $adType Ad carregado!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad aberto!');
+        break;
+      case AdmobAdEvent.closed:
+        print('Admob $adType Ad fechado!');
+        break;
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType falhou ao carregar. :(');
+        break;
+      default:
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     usuarioLogado();
-    recuperarContoSalvo();
+    interstitialAd = AdmobInterstitial(
+      adUnitId: "ca-app-pub-1685263058686351/1953487567",
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        handleEvent(event, args, 'Interstitial');
+      },
+    );
+    interstitialAd.load();
+   
+  }
+
+  void showInterstitial() async {
+    if (await interstitialAd.isLoaded) {
+      interstitialAd.show();
+    } else {
+      print("Interstitial ainda não foi carregado...");
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    interstitialAd.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ListView.separated(
-          padding: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
           itemCount: widget.listaContos.length,
           separatorBuilder: (context, index) => Divider(
                 height: 1.0,
-                color: Colors.black,
-                thickness: 1.0,
+                color: Colors.grey[800],
+                //thickness: 1.0,
               ),
           itemBuilder: (context, index) {
              initializeDateFormatting('pt_BR');
-             var formatador = DateFormat('d/M/y H:mm');
-             String dataFormatada = formatador.format( widget.listaContos[index]['data'].toDate() );
+             var formatadorData = DateFormat('d/M/y');
+             var formatadorHora = DateFormat('H:mm');
+             String dataFormatada = formatadorData.format( widget.listaContos[index]['data'].toDate() );
+             String horaFormatada = formatadorHora.format( widget.listaContos[index]['data'].toDate() );
             
             return Container(
               padding: EdgeInsets.only(left: 12, right: 12),
@@ -133,37 +179,46 @@ class _TelaInicialState extends State<TelaInicial> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   SizedBox(
-                    height: 8,
+                    height: 16,
                   ),
+                  
                   Text(
                     widget.listaContos[index]['titulo'],
                     maxLines: 2,
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
+
+                   SizedBox(
+                    height: 4,
+                  ),
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         'em ',
                         maxLines: 1,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
+                        style: TextStyle(color: Colors.grey, fontSize: 14.0),
                       ),
                       Text(
                         widget.listaContos[index]['categoria'],
                         maxLines: 1,
-                        style: TextStyle(color: Colors.blue[800], fontSize: 18.0),
+                        style: TextStyle(color: Colors.blue[800], fontSize: 14.0),
                       ),
 
                      
                     ],
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 4,
                   ),
+
                   Text(
-                    dataFormatada.toString(),
+                    dataFormatada.toString() + ' às ' + horaFormatada.toString(),
                     style: TextStyle(
+                      fontSize: 12,
                       color: Color(0xffb34700),
                     ),
                   ),
@@ -171,6 +226,8 @@ class _TelaInicialState extends State<TelaInicial> {
                   SizedBox(
                     height: 8,
                   ),
+
+                  /*
                   Image.network(
                     widget.listaContos[index]['imagem'],
                     fit: BoxFit.cover,
@@ -179,15 +236,17 @@ class _TelaInicialState extends State<TelaInicial> {
                   SizedBox(
                     height: 8,
                   ),
+                  */
+
                   GestureDetector(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.listaContos[index]['texto'],
-                          maxLines: 3,
+                          maxLines: 6,
                           style: TextStyle(
-                              color: Colors.grey[400], fontSize: 14.0),
+                              color: Colors.grey[500], fontSize: 14.0),
                         ),
                         Text(
                           'ver mais',
@@ -195,10 +254,10 @@ class _TelaInicialState extends State<TelaInicial> {
                         ),
                       ],
                     ),
-                    onTap: () {
+                    onTap: () {                                         
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              Conto(widget.listaContos[index].reference.id)));
+                          builder: (context) => Conto(widget.listaContos[index].reference.id)));
+                      showInterstitial();
                     },
                   ),
                   SizedBox(
@@ -242,8 +301,8 @@ class _TelaInicialState extends State<TelaInicial> {
 
                       user != null ? IconButton(
                               icon: Icon(
-                                  Icons.bookmark_border,
-                                  color: listaSalvos.contains(widget.listaContos[index].reference.id) == false ?  Color(0xffb34700) : Colors.blue[800]),
+                                  listaSalvos.contains(widget.listaContos[index].reference.id) == false ? Icons.bookmark_border_sharp : Icons.bookmark_sharp,
+                                  color: Color(0xffb34700)),
                               onPressed: () {
                                 salvarConto(widget.listaContos[index].reference.id);
                               }
@@ -582,10 +641,11 @@ class _TelaInicialState extends State<TelaInicial> {
                           
                     ],
                   ),
-              
+                  /*
                   SizedBox(
                     height: 8,
                   ),
+                  */
                 ],
               ),
             );

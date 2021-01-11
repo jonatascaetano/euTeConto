@@ -99,9 +99,10 @@ class _MeusComentariosState extends State<MeusComentarios> {
       ),
       itemBuilder: (context, index) {
         initializeDateFormatting('pt_BR');
-        var formatador = DateFormat('d/M/y H:mm');
-        String dataFormatada =
-            formatador.format(widget.listaComentarios[index]['data'].toDate());
+        var formatadorData = DateFormat('d/M/y');
+        var formatadorHora = DateFormat('H:mm');
+        String dataFormatada = formatadorData.format(widget.listaComentarios[index]['data'].toDate());
+        String horaFormatada = formatadorHora.format(widget.listaComentarios[index]['data'].toDate());
 
         return Container(
           padding: EdgeInsets.all(12),
@@ -113,7 +114,7 @@ class _MeusComentariosState extends State<MeusComentarios> {
                 child: Text(
                   widget.listaComentarios[index]['titulo'],
                   maxLines: 3,
-                  style: TextStyle(color: Colors.grey[200], fontSize: 14.0),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
                 ),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -126,17 +127,19 @@ class _MeusComentariosState extends State<MeusComentarios> {
               ),
               Text(
                 widget.listaComentarios[index]['texto'],
-                style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
               ),
-              SizedBox(
-                height: 8,
-              ),
+              
               Row(
                 children: [
+
                   Text(
-                    dataFormatada.toString(),
-                    style: TextStyle(color: Color(0xffb34700), fontSize: 14.0),
+                    dataFormatada.toString() + ' às ' + horaFormatada.toString(),
+                    style: TextStyle(
+                      color: Color(0xffb34700),
+                    ),
                   ),
+
                   Expanded(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,

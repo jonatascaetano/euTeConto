@@ -32,7 +32,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
    }
 
-android {
+   android {
+        
     compileSdkVersion 29
 
     sourceSets {
@@ -53,7 +54,7 @@ android {
         versionName flutterVersionName
     }
 
-       signingConfigs {
+    signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
@@ -77,4 +78,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation 'com.google.firebase:firebase-ads:18.0.0'
 }

@@ -36,8 +36,7 @@ class _ComentariosContoState extends State<ComentariosConto> {
 
   @override
   Widget build(BuildContext context) {
-    if(user != null){
-      if (widget.documentSnapshot.data()['autor'] == widget.autorConto) {
+     if (widget.documentSnapshot.data()['autor'] == widget.autorConto) {
       setState(() {
         autor = 'Autor';
       });
@@ -46,19 +45,15 @@ class _ComentariosContoState extends State<ComentariosConto> {
         autor = 'Anônimo';
       });
     }
-    }else if (user == null){
-      setState(() {
-        autor = 'Anônimo';
-      });
-    }
      initializeDateFormatting('pt_BR');
-     var formatador = DateFormat('d/M/y H:mm');
-     String dataFormatada = formatador.format( widget.documentSnapshot.data()['data'].toDate() );
-     print('data formatada ' + dataFormatada.toString());
+      var formatadorData = DateFormat('d/M/y');
+      var formatadorHora = DateFormat('H:mm');
+     String dataFormatada = formatadorData.format( widget.documentSnapshot.data()['data'].toDate() );
+     String horaFormatada = formatadorHora.format( widget.documentSnapshot.data()['data'].toDate() );
 
     return Container(
       margin: EdgeInsets.only(bottom: 8),
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(left: 8, right: 8),
       width: MediaQuery.of(context).size.width * 0.8,
       //color: Colors.black26,
       child: Column(
@@ -66,12 +61,14 @@ class _ComentariosContoState extends State<ComentariosConto> {
         children: [
           Text(
                 autor,
-                style: TextStyle(color: Colors.white, fontSize: 14.0),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
               ),
-          
+          SizedBox(
+                height: 8,
+              ),
           Text(
             widget.documentSnapshot.data()['texto'],
-            style: TextStyle(color: Colors.grey[400], fontSize: 14.0),
+            style: TextStyle(color: Colors.white, fontSize: 14.0),
           ),
           SizedBox(
             height: 8,
@@ -79,8 +76,11 @@ class _ComentariosContoState extends State<ComentariosConto> {
           Row(
             children: [
               Text(
-               dataFormatada.toString(),
-                style: TextStyle(color: Color(0xffb34700), fontSize: 14.0),
+                dataFormatada.toString() + ' às ' + horaFormatada.toString(),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
               ),
               user == null ? Expanded(
                 child: Row(
@@ -226,7 +226,9 @@ class _ComentariosContoState extends State<ComentariosConto> {
               ) : Container()
             ],
           ),
-          
+          SizedBox(
+                height: 8,
+              ),
         ],
       ),
     );

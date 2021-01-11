@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
              return <Widget> [
                SliverAppBar(
-                backgroundColor: Color(0xff0f1b1b),                  
+                backgroundColor: Color(0xff602040),                  
                 toolbarHeight: 40.0,
                 floating: false,
                 pinned: false,
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
 
                      user != null ? IconButton(
                      icon: Icon(Icons.add_comment_outlined),
-                     color: Color(0xffb34700),
+                     color: Colors.grey[600], //Color(0xffb34700),
                      onPressed: (){
                         Navigator.of(context).push(
                           MaterialPageRoute(builder: (context)=> NovoConto())
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
 
                     user != null ?  IconButton(
                      icon: Icon(Icons.exit_to_app),
-                     color: Colors.red,
+                     color: Colors.grey[600],
                      onPressed: (){
                        FirebaseAuth.instance.signOut().then((_){
                          setState(() {
@@ -100,9 +100,9 @@ class _HomePageState extends State<HomePage>  with AutomaticKeepAliveClientMixin
                SliverPersistentHeader(               
                 delegate: _SliverAppBarDelegate(                 
                   TabBar(                                    
-                    labelColor: Color(0xffff6600),                    
-                    indicatorColor: Colors.transparent,                  
-                    unselectedLabelColor: Color(0xffb34700),                                                         
+                    labelColor: Colors.white, //Color(0xffb34700),                    
+                    indicatorColor: Colors.white,                                      
+                    unselectedLabelColor: Colors.grey[600], //Color(0xffb34700),                                                         
                     tabs:                      
                     [
                       Tab(                                             
@@ -159,6 +159,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container( 
+      /*
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -169,7 +170,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         color:  Color(0xff0f1b1b), 
       ),
       padding: EdgeInsets.only(top: 8, bottom: 4),   
-         
+      */ 
+      //color: Color(0xff0f1b1b),
+      color: Color(0xff602040),
       child: _tabBar 
     );
   }

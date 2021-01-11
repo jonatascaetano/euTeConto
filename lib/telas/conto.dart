@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:admob_flutter/admob_flutter.dart';
+
+const String testDevice = 'ca-app-pub-1685263058686351~7553174892';
 
 // ignore: must_be_immutable
 class Conto extends StatefulWidget {
@@ -18,9 +21,10 @@ class Conto extends StatefulWidget {
 class _ContoState extends State<Conto> {
   List<DocumentSnapshot> comentariosLista = List();
   TextEditingController comentarioController = TextEditingController();
+  GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
   bool curtido= false;
-  
 
+  
   recuperarComentariosConto(){
     FirebaseFirestore.instance
         .collection('contos')
@@ -32,6 +36,7 @@ class _ContoState extends State<Conto> {
         });
 
   }
+  
 
    excluirConto(contoId) {
     showDialog(
@@ -130,7 +135,7 @@ class _ContoState extends State<Conto> {
       }
       );
   }
-
+  
   User user;
 
   usuarioLogado()async{
@@ -139,16 +144,64 @@ class _ContoState extends State<Conto> {
     print(user.uid);
   }
 
+  
+  AdmobBanner getBanner(AdmobBannerSize size) {
+    return AdmobBanner(
+      adUnitId: 'ca-app-pub-1685263058686351/9146098791',
+      adSize: size,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+    );
+  }
+
+  AdmobBanner getMiniBanner(AdmobBannerSize size) {
+    return AdmobBanner(
+      adUnitId: 'ca-app-pub-1685263058686351/5155463457',
+      adSize: size,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+    );
+  }
+
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('Novo $adType Ad carregado!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad aberto!');
+        break;
+      case AdmobAdEvent.closed:
+        print('Admob $adType Ad fechado!');
+        break;
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType falhou ao carregar. :(');
+        break;
+      default:
+    }
+  }
+  
+
+
   @override
   void initState() {
     super.initState();
+    Admob.initialize();
     recuperarComentariosConto();
     usuarioLogado();
+
+
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldKey,
         backgroundColor: Color(0xff0f1b1b),
         body: StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
@@ -185,9 +238,12 @@ class _ContoState extends State<Conto> {
                     dados['curtidas'] = snapshot.data['curtidas'];
                     dados['autor'] = snapshot.data['autor'];
                     dados['data'] = snapshot.data['data'];
+                    dados['idConto'] = snapshot.data.reference.id;
                     initializeDateFormatting('pt_BR');
-                    var formatador = DateFormat('d/M/y H:mm');
-                    String dataFormatada = formatador.format(dados['data'].toDate());
+                     var formatadorData = DateFormat('d/M/y');
+                     var formatadorHora = DateFormat('H:mm');
+                    String dataFormatada = formatadorData.format(dados['data'].toDate());
+                    String horaFormatada = formatadorHora.format(dados['data'].toDate());
 
                     return Container(
                         padding: EdgeInsets.only(
@@ -204,33 +260,42 @@ class _ContoState extends State<Conto> {
                                       color: Colors.white, fontSize: 18.0),
                                 ),
                                 ),
+                                
                                 SizedBox(
                                   height: 8,
                                 ),
+                           
+                                
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
                                       'em ',
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
+                                      style: TextStyle(color: Colors.grey, fontSize: 14.0),
                                     ),
                                     Text(
                                       dados['categoria'],
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.blue[800], fontSize: 18.0),
+                                      style: TextStyle(color: Colors.blue[800], fontSize: 14.0),
                                     ),
                                   ],
                                 ),
+
                                 SizedBox(
-                                  height: 8,
+                                  height: 4,
                                 ),
+
                                 Text(
-                                  dataFormatada.toString(),
+                                  dataFormatada.toString() + ' às ' + horaFormatada.toString(),
                                   style: TextStyle(
+                                    fontSize: 12,
                                     color: Color(0xffb34700),
                                   ),
                                 ),
+
+
+                                /*        
                                 SizedBox(
                                   height: 8,
                                 ),
@@ -242,17 +307,27 @@ class _ContoState extends State<Conto> {
                                         width:
                                             MediaQuery.of(context).size.width,
                                       ),
+                                */ 
+                                 SizedBox(
+                                  height: 12,
+                                ),
+
+                                Container(                                
+                                  child: getMiniBanner(AdmobBannerSize.BANNER),
+                                ),     
+
                                 SizedBox(
-                                  height: 8,
+                                  height: 12,
                                 ),
                                 Text(
                                   dados['texto'],
                                   style: TextStyle(
-                                      color: Colors.grey[400], fontSize: 14.0),
+                                      color: Colors.grey[500], fontSize: 14.0),
                                 ),
                                 SizedBox(
                                   height: 8,
-                                ),
+                                ), 
+
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -453,8 +528,17 @@ class _ContoState extends State<Conto> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 8,
+                                  height: 12,
                                 ),
+                                
+                                Container(                                
+                                  child: getBanner(AdmobBannerSize.MEDIUM_RECTANGLE),
+                                ),
+                               
+                                SizedBox(
+                                  height: 12,
+                                ),
+
                                 comentariosLista.length == 0
                                     ? Container()
                                     : Text(
@@ -463,18 +547,18 @@ class _ContoState extends State<Conto> {
                                             color: Color(0xffb34700),
                                             fontSize: 18.0),
                                       ),
+
                                 SizedBox(
                                   height: 8,
                                 ),
+
                                 comentariosLista == null
                                     ? Container()
                                     : Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: comentariosLista.reversed.toList()
-                                            .map((doc) => ComentariosConto(
-                                                doc, dados['autor'])) 
-                                            .toList(),
+                                            .map((doc) => ComentariosConto(doc, dados['autor'])).toList(),
                                       ),
                                 user != null ?
                                 GestureDetector(
@@ -486,8 +570,8 @@ class _ContoState extends State<Conto> {
                                               fontSize: 18.0),
                                         ),
                                   ),
-                                  onTap: (){
-                                    inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
+                                  onTap: (){                                  
+                                   inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
                                   },
                                 ) : Container()
                               ],
