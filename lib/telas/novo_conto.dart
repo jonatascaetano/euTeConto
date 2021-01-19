@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +45,51 @@ class _NovoContoState extends State<NovoConto> {
         'categoria' : categoria,
         'comentarios' : 0,
         'imagem' : urlImagem,
+        'visualizações' : 0,
 
       }
     ).then((_){    
       Navigator.of(context).pop();
     });
+  }
+
+  AdmobBanner getMiniBanner1(AdmobBannerSize size) {
+    return AdmobBanner(
+      adUnitId: 'ca-app-pub-1685263058686351/2708407285',
+      adSize: size,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+    );
+  }
+  /*
+  AdmobBanner getMiniBanner2(AdmobBannerSize size) {
+    return AdmobBanner(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adSize: size,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+    );
+  }
+  */
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('Novo $adType Ad carregado!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad aberto!');
+        break;
+      case AdmobAdEvent.closed:
+        print('Admob $adType Ad fechado!');
+        break;
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType falhou ao carregar. :(');
+        break;
+      default:
+    }
   }
 
   @override
@@ -104,6 +145,19 @@ class _NovoContoState extends State<NovoConto> {
                         
                         )
                   ),
+
+                      SizedBox(
+                        height: 8,
+                      ),
+
+                      Container(                                
+                        child: getMiniBanner1(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
+                      ),     
+
+                      SizedBox(
+                        height: 8,
+                      ),
+
                   TextField(
                     cursorColor: Color(0xffb34700),
                     controller: textoController,
@@ -121,9 +175,22 @@ class _NovoContoState extends State<NovoConto> {
                         
                         )
                   ),
+
+                  /*
+                   SizedBox(
+                        height: 8,
+                      ),
+
+                      Container(                                
+                        child: getMiniBanner2(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
+                      ),
+
+                    */       
+
                   SizedBox(
-                    height: 8,
-                  ),
+                        height: 8,
+                      ),
+                  
                   Text('Categoria',
                     style: TextStyle(
                         color: Color(0xffb34700),
@@ -133,16 +200,16 @@ class _NovoContoState extends State<NovoConto> {
                   SizedBox(
                     height: 8,
                   ),
-                  SizedBox(
+
+                  Container(
                     height: 30,
-                    child: Expanded(
                     child: ListView.builder(
                       
                     scrollDirection: Axis.horizontal,                 
                     itemCount: categorias.length,
                     itemBuilder: (context, index){
                       return Container(
-                        height: 40,
+                        height: 28,
                         child: FlatButton(                       
                             onPressed: (){
                               
@@ -167,7 +234,7 @@ class _NovoContoState extends State<NovoConto> {
                     }
                    )
                   ),
-                  ),
+                  
                   SizedBox(
                     height: 8,
                   ),                 
@@ -181,7 +248,7 @@ class _NovoContoState extends State<NovoConto> {
                             ),
                       color: Colors.grey[400],
                       onPressed: (){
-                       if(tituloController.text.isNotEmpty && textoController.text.isNotEmpty){
+                       if(tituloController.text.isNotEmpty && textoController.text.isNotEmpty && textoController.text.length > 560){
                          salvarTexto();
                        }
                       }

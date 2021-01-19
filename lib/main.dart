@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:Confidence/telas/home_page.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -7,6 +8,7 @@ import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Admob.initialize();
   runApp(MyApp());
  
 }
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Eu te conto',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color(0xff0f1b1b),  
+        primaryColor: Color(0xff111111),  
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),

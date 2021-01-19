@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:Confidence/telas/cadastro.dart';
 import 'package:Confidence/telas/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,9 @@ class _LoginState extends State<Login> {
       email: emailController.text,
        password: senhaController.text
        ).then((value){
+         FirebaseFirestore.instance.collection('usuarios').doc(value.user.uid).update({
+           'ultimoAcesso' : DateTime.now()
+         });
          Navigator.of(context).pushReplacement(
            MaterialPageRoute(builder: (context)=> HomePage())
          );

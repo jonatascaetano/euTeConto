@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:Confidence/telas/conto.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,18 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+
 // ignore: must_be_immutable
-class TelaListaSalvos extends StatefulWidget {
+class TelaListaBiblioteca extends StatefulWidget {
+  List<QueryDocumentSnapshot> listaContos;
 
-  List<DocumentSnapshot> listaContos;
-
-  TelaListaSalvos(this.listaContos);
+  TelaListaBiblioteca(this.listaContos);
 
   @override
-  _TelaListaSalvosState createState() => _TelaListaSalvosState();
+  _TelaListaBibliotecaState createState() => _TelaListaBibliotecaState();
 }
 
-class _TelaListaSalvosState extends State<TelaListaSalvos> {
+class _TelaListaBibliotecaState extends State<TelaListaBiblioteca> {
 
   TextEditingController comentarioController = TextEditingController();
   List<String> listaSalvos = List();
@@ -128,7 +129,7 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
 
   AdmobBanner getBanner(AdmobBannerSize size) {
       return AdmobBanner(
-        adUnitId: 'ca-app-pub-1685263058686351/1767996171',
+        adUnitId: 'ca-app-pub-1685263058686351/7371676645',
         adSize: size,
         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
           handleEvent(event, args, 'Banner');
@@ -142,13 +143,14 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
     usuarioLogado();
     recuperarContoSalvo();
     interstitialAd = AdmobInterstitial(
-      adUnitId: 'ca-app-pub-1685263058686351/4253740475',
+      adUnitId: 'ca-app-pub-1685263058686351/2685507935',
       listener: (AdmobAdEvent event, Map<String, dynamic> args) {
         if (event == AdmobAdEvent.closed) interstitialAd.load();
         handleEvent(event, args, 'Interstitial');
       },
     );
     interstitialAd.load();
+   
   }
 
   void showInterstitial() async {

@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 
-const String testDevice = 'ca-app-pub-1685263058686351~7553174892';
 
 // ignore: must_be_immutable
 class Conto extends StatefulWidget {
@@ -19,11 +18,18 @@ class Conto extends StatefulWidget {
 }
 
 class _ContoState extends State<Conto> {
+
+  //variaveis
+
   List<DocumentSnapshot> comentariosLista = List();
   TextEditingController comentarioController = TextEditingController();
   GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
   bool curtido= false;
+  User user;
+  List<DocumentSnapshot> sugeridos = List();
+  List<Map> imagensCategoria = List();
 
+  //funções
   
   recuperarComentariosConto(){
     FirebaseFirestore.instance
@@ -35,6 +41,20 @@ class _ContoState extends State<Conto> {
           comentariosLista = event.docs;
         });
 
+  }
+
+  recuperarImagensCategoria()async{
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('categorias').get();
+    Map<String, dynamic> categoria = Map();
+    querySnapshot.docs.forEach((element) {
+      String categoriaRecebida = element.data()['categoria'];
+      categoria[categoriaRecebida] = element.data()['imagem'];
+      imagensCategoria.add(categoria);
+    });
+
+    imagensCategoria.forEach((element) {
+      print(element.values.toString());
+    });
   }
   
 
@@ -135,15 +155,12 @@ class _ContoState extends State<Conto> {
       }
       );
   }
-  
-  User user;
 
   usuarioLogado()async{
     FirebaseAuth auth = FirebaseAuth.instance;
     user = auth.currentUser;
     print(user.uid);
   }
-
   
   AdmobBanner getBanner(AdmobBannerSize size) {
     return AdmobBanner(
@@ -155,7 +172,7 @@ class _ContoState extends State<Conto> {
     );
   }
 
-  AdmobBanner getMiniBanner(AdmobBannerSize size) {
+  AdmobBanner getMiniBanner1(AdmobBannerSize size) {
     return AdmobBanner(
       adUnitId: 'ca-app-pub-1685263058686351/5155463457',
       adSize: size,
@@ -165,6 +182,17 @@ class _ContoState extends State<Conto> {
     );
   }
 
+  /*
+  AdmobBanner getMiniBanner2(AdmobBannerSize size) {
+    return AdmobBanner(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adSize: size,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+    );
+  }
+  */
 
   void handleEvent(
       AdmobAdEvent event, Map<String, dynamic> args, String adType) {
@@ -185,14 +213,24 @@ class _ContoState extends State<Conto> {
     }
   }
   
+  void aumentarView() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('contos').doc(widget.id).get();
+    int views = documentSnapshot.data()['visualizações'];
+    int novoViews = views + 1;
+    FirebaseFirestore.instance.collection('contos').doc(widget.id).update({
+      'visualizações' : novoViews
+    });
+  }
 
+  //funções de ciclo de vida
 
   @override
   void initState() {
     super.initState();
-    Admob.initialize();
     recuperarComentariosConto();
     usuarioLogado();
+    aumentarView();
+    recuperarImagensCategoria();
 
 
   }
@@ -200,6 +238,7 @@ class _ContoState extends State<Conto> {
 
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xff0f1b1b),
@@ -260,6 +299,18 @@ class _ContoState extends State<Conto> {
                                       color: Colors.white, fontSize: 18.0),
                                 ),
                                 ),
+
+                                SizedBox(
+                                  height: 4,
+                                ),
+
+                                Text(
+                                  dataFormatada.toString() + ' às ' + horaFormatada.toString(),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xffb34700),
+                                  ),
+                                ),
                                 
                                 SizedBox(
                                   height: 8,
@@ -282,19 +333,6 @@ class _ContoState extends State<Conto> {
                                   ],
                                 ),
 
-                                SizedBox(
-                                  height: 4,
-                                ),
-
-                                Text(
-                                  dataFormatada.toString() + ' às ' + horaFormatada.toString(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xffb34700),
-                                  ),
-                                ),
-
-
                                 /*        
                                 SizedBox(
                                   height: 8,
@@ -313,7 +351,7 @@ class _ContoState extends State<Conto> {
                                 ),
 
                                 Container(                                
-                                  child: getMiniBanner(AdmobBannerSize.BANNER),
+                                  child: getMiniBanner1(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
                                 ),     
 
                                 SizedBox(
@@ -527,6 +565,26 @@ class _ContoState extends State<Conto> {
                                         }),
                                   ],
                                 ),
+                                
+                                SizedBox(
+                                  height: 12,
+                                ),
+
+                                user != null ?
+                                GestureDetector(
+                                  child: Padding(padding: EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                          'Comentar',
+                                          style: TextStyle(
+                                              color: Color(0xffb34700),
+                                              fontSize: 18.0),
+                                        ),
+                                  ),
+                                  onTap: (){                                  
+                                   inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
+                                  },
+                                ) : Container(),
+
                                 SizedBox(
                                   height: 12,
                                 ),
@@ -560,20 +618,102 @@ class _ContoState extends State<Conto> {
                                         children: comentariosLista.reversed.toList()
                                             .map((doc) => ComentariosConto(doc, dados['autor'])).toList(),
                                       ),
-                                user != null ?
-                                GestureDetector(
-                                  child: Padding(padding: EdgeInsets.only(bottom: 16),
-                                    child: Text(
-                                          'Comentar',
-                                          style: TextStyle(
-                                              color: Color(0xffb34700),
-                                              fontSize: 18.0),
-                                        ),
+
+                                /*
+
+                                SizedBox(
+                                  height: 8,
+                                ),
+
+                                Container(                                
+                                  child: getMiniBanner2(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
+                                ),
+                                
+                                */   
+
+                                SizedBox(
+                                  height: 8,
+                                ),
+
+                                Container(
+                                  height: 220,
+                                  child: FutureBuilder<QuerySnapshot>(
+                                    future: FirebaseFirestore.instance.collection('contos').orderBy('visualizações', descending: true ).get(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.waiting:
+                                          return Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Center(
+                                            child: CircularProgressIndicator(
+                                                backgroundColor: Color(0xffb34700),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
+                                            )
+                                          );
+                                          break;
+                                        default:
+                                          if (!snapshot.hasData) {
+                                            return Container();
+                                          } else {
+                                              snapshot.data.docs.forEach((element) {
+                                                if(element['titulo'] != dados['titulo']){
+                                                  sugeridos.add(element);
+                                                }
+                                              });
+                                            return ListView.separated(
+                                                scrollDirection: Axis.horizontal,
+                                                padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                                  itemCount: sugeridos.length,
+                                                  separatorBuilder: (context, index) => Divider(
+                                                        height: 5.0,
+                                                        color: Colors.grey[800],
+                                                        //thickness: 1.0,
+                                                      ),
+                                                   itemBuilder: (context, index){
+                                                     return Padding(padding: EdgeInsets.only(right: 8),
+                                                      child: Container(
+                                                        width: 250,
+                                                        child: Card(                                                       
+                                                        
+                                                        color: Color(0xff111111),
+                                                        child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,  
+                                                        children: [
+                                                          
+                                                          sugeridos[index]['imagem'] == null
+                                                            ? Container()
+                                                            : Image.network(
+                                                                sugeridos[index]['imagem'],
+                                                                fit: BoxFit.cover,
+                                                                width: 250,
+                                                              ),
+                                                              SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                          Padding(padding: EdgeInsets.all(4),
+                                                          child: Text(sugeridos[index]['titulo'],
+                                                            maxLines: 2,
+                                                            style: TextStyle(
+                                                              color: Colors.grey,
+                                                              fontSize: 14,
+                                                              
+                                                            ),
+                                                           ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      ),
+                                                      )
+                                                     );
+                                                   },   
+                                             );
+                                          }
+                                        }
+                                    }
                                   ),
-                                  onTap: (){                                  
-                                   inserirComentario(context, snapshot.data.reference.id, dados['titulo']);
-                                  },
-                                ) : Container()
+                                )  
                               ],
                             ),
                           ),

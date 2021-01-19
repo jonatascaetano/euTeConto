@@ -52,7 +52,48 @@ class Search extends SearchDelegate<String> {
   
     @override
     Widget buildResults(BuildContext context) {
-       return Container();
+       if(query.isNotEmpty){
+      return FutureBuilder<QuerySnapshot>(
+       future: FirebaseFirestore.instance.collection('contos').orderBy('data').get(),
+       builder: (context, snapshot){
+         switch(snapshot.connectionState){
+          case ConnectionState.none:            
+          case ConnectionState.waiting:
+            return Container(
+              color: Color(0xff0f1b1b),
+            );
+            break;
+          default:
+          List<QueryDocumentSnapshot> queryDocumentSnapshot = List();
+                  snapshot.data.docs.forEach((element) {
+                    if(element.data()['titulo'].toString().toLowerCase().contains(query.toLowerCase())){
+                      queryDocumentSnapshot.add(element);
+                      }
+                  });
+          if(queryDocumentSnapshot.length == 0 ){
+                  return Container(
+                    color: Color(0xff0f1b1b),
+                    child: Center(
+                    child: Text('Nada encontrado',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ),
+                  );
+                }else{
+                    
+            return Container(
+               color: Color(0xff0f1b1b),
+              child: TelaInicial(queryDocumentSnapshot.reversed.toList()),
+            );
+          }           
+        }
+       }
+       );
+     }else{
+       return Container(
+          color: Color(0xff0f1b1b),
+       );
+     }    
     }
   
     @override

@@ -23,7 +23,8 @@ class _CadastroState extends State<Cadastro> {
        password: senhaController.text
        ).then((value){
          FirebaseFirestore.instance.collection('usuarios').doc(value.user.uid).set({
-           'situação' : 'ativa'
+           'situação' : 'ativa',
+           'ultimoAcesso' : DateTime.now()
          });
          Navigator.of(context).pop();
          Navigator.of(context).pushReplacement(
