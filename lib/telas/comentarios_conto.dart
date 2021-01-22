@@ -9,8 +9,9 @@ import 'package:intl/date_symbol_data_local.dart';
 class ComentariosConto extends StatefulWidget {
   DocumentSnapshot documentSnapshot;
   String autorConto;
+  String idConto;
 
-  ComentariosConto(this.documentSnapshot, this.autorConto);
+  ComentariosConto(this.documentSnapshot, this.autorConto, this.idConto);
 
   @override
   _ComentariosContoState createState() => _ComentariosContoState();
@@ -19,6 +20,10 @@ class ComentariosConto extends StatefulWidget {
 class _ComentariosContoState extends State<ComentariosConto> {
   String autor;
   TextEditingController comentarioController = TextEditingController();
+  String nomeAutorComentario;
+    int comentariosNum;
+    int comentarioNovoNum;
+
 
   User user;
 
@@ -28,10 +33,63 @@ class _ComentariosContoState extends State<ComentariosConto> {
     print(user.uid);
   }
 
+  void recuperarAutorComentario() async {
+   DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('usuarios').doc('usuarios').collection('nomes').doc(widget.documentSnapshot.data()['autor']).get();
+    setState(() {
+      nomeAutorComentario = documentSnapshot.data()['usuario'];
+    });
+  }
+
+  excluirComentario() async {
+    
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('contos')
+        .doc(widget.idConto)
+        .get();
+      comentariosNum = documentSnapshot.data()['comentarios'];
+      comentarioNovoNum = comentariosNum - 1;
+      print('numero de comentarios : ' + comentariosNum.toString());
+      print('numero de comentarios : ' + comentarioNovoNum.toString());
+
+    if (comentariosNum != null) {
+      print('comentariosNãoNum');
+
+      FirebaseFirestore.instance
+          .collection('comentarios')
+          .doc(user.uid)
+          .collection('comentarios')
+          .doc(widget.documentSnapshot.reference.id)
+          .delete();
+
+      FirebaseFirestore.instance
+          .collection('contos')
+          .doc(widget.idConto)
+          .collection('comentarios')
+          .doc(widget.documentSnapshot.reference.id)
+          .delete();
+
+      FirebaseFirestore.instance
+          .collection('contos')
+          .doc(widget.idConto)
+          .update({'comentarios': comentarioNovoNum});
+
+      Navigator.of(context).pop();
+    } else if (comentariosNum == null) {
+      FirebaseFirestore.instance
+          .collection('comentarios')
+          .doc(user.uid)
+          .collection('comentarios')
+          .doc(widget.documentSnapshot.reference.id)
+          .delete();
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     usuarioLogado();
+    recuperarAutorComentario();
   }
 
   @override
@@ -41,9 +99,15 @@ class _ComentariosContoState extends State<ComentariosConto> {
         autor = 'Autor';
       });
     } else {
+      nomeAutorComentario == null ?
       setState(() {
         autor = 'Anônimo';
+      }) :
+
+      setState(() {
+        autor = nomeAutorComentario;
       });
+
     }
      initializeDateFormatting('pt_BR');
       var formatadorData = DateFormat('d/M/y');
@@ -60,25 +124,27 @@ class _ComentariosContoState extends State<ComentariosConto> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-                autor,
-                style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
+                autor + ' disse:',
+                style: TextStyle(color: Colors.grey[600], fontSize: 11.0),
               ),
           SizedBox(
-                height: 8,
+                height: 6,
               ),
+
           Text(
             widget.documentSnapshot.data()['texto'],
             style: TextStyle(color: Colors.white, fontSize: 14.0),
           ),
+
           SizedBox(
-            height: 8,
+            height: 0,
           ),
           Row(
             children: [
               Text(
                 dataFormatada.toString() + ' às ' + horaFormatada.toString(),
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: Colors.grey[600],
                 ),
               ),
@@ -90,7 +156,8 @@ class _ComentariosContoState extends State<ComentariosConto> {
                   IconButton(
                       icon: Icon(
                         Icons.more_vert_outlined,
-                        color: Color(0xffb34700),
+                        size: 14,
+                        color: Color(0xffb34700),              
                       ),
                       onPressed: (){
                         showDialog(
@@ -161,6 +228,7 @@ class _ComentariosContoState extends State<ComentariosConto> {
                   IconButton(
                       icon: Icon(
                         Icons.more_vert_outlined,
+                        size: 14,
                         color: Color(0xffb34700),
                       ),
                       onPressed: (){
@@ -223,7 +291,44 @@ class _ComentariosContoState extends State<ComentariosConto> {
                       ),
                 ],
               )
-              ) : Container()
+              ) : Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                            icon: Icon(
+                              Icons.more_vert_outlined,
+                              size: 14,
+                              color: Color(0xffb34700),
+                            ),
+                        onPressed: () {
+                          showDialog(
+                              context: (context),
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Excluir comentario',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  actions: [
+                                    FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancelar')),
+                                    FlatButton(
+                                        onPressed: () {
+                                        
+                                        excluirComentario();
+                                        },
+                                        child: Text('Excluir')),
+                                  ],
+                                );
+                              });
+                        }),
+                  ],
+                ))
             ],
           ),
           SizedBox(

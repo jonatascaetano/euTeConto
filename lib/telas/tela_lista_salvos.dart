@@ -304,6 +304,81 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                                   onPressed: () {}),
                             ],
                           ),
+
+                          Container(
+                           child:  StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection('contos').doc( widget.listaContos[index].reference.id ).collection('comentarios').snapshots(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.waiting:
+                                          return Container(
+                                            
+                                            child: Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              )
+                                            /*
+                                            Center(
+                                            child: CircularProgressIndicator(
+                                                backgroundColor: Color(0xffb34700),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
+                                            )
+                                            */
+                                          );
+                                          break;
+                                        default:
+                                          if (!snapshot.hasData) {
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          } else {                                        
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    snapshot.data.docs.length.toString(),
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          }
+                                        }
+                                    }
+                                  ),
+                         ),
+
+                          /*
                           Row(
                             children: [
                               Text(
@@ -318,6 +393,7 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                                   onPressed: () {}),
                             ],
                           ),
+                          */
 
                           user != null ? IconButton(
                                   icon: Icon(
@@ -498,6 +574,81 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                                   onPressed: () {}),
                             ],
                           ),
+
+                          Container(
+                           child:  StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection('contos').doc( widget.listaContos[index].reference.id ).collection('comentarios').snapshots(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.waiting:
+                                          return Container(
+                                          
+                                            child: Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              )
+                                            /*
+                                            Center(
+                                            child: CircularProgressIndicator(
+                                                backgroundColor: Color(0xffb34700),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
+                                            )
+                                            */
+                                          );
+                                          break;
+                                        default:
+                                          if (!snapshot.hasData) {
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          } else {                                        
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    snapshot.data.docs.length.toString(),
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          }
+                                        }
+                                    }
+                                  ),
+                         ),
+
+                          /*
                           Row(
                             children: [
                               Text(
@@ -512,6 +663,7 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                                   onPressed: () {}),
                             ],
                           ),
+                          */
 
                           IconButton(
                               icon: Icon(
@@ -665,7 +817,7 @@ class _TelaListaSalvosState extends State<TelaListaSalvos> {
                         ),
                       ),
 
-                      index != 0 && index % 4 == 0 ?
+                      index != 0 && index % 6 == 0 ?
                         Column(
                           children: [
                               SizedBox(

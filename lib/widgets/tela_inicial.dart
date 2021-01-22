@@ -183,7 +183,6 @@ class _TelaInicialState extends State<TelaInicial> {
              var formatadorHora = DateFormat('H:mm');
              String dataFormatada = formatadorData.format( widget.listaContos[index]['data'].toDate() );
              String horaFormatada = formatadorHora.format( widget.listaContos[index]['data'].toDate() );
- 
                return Container(   
                   color: Color(0xff0f1b1b),
                   child: Column(
@@ -305,6 +304,81 @@ class _TelaInicialState extends State<TelaInicial> {
                                   onPressed: () {}),
                             ],
                           ),
+
+                          Container(
+                           child:  StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection('contos').doc( widget.listaContos[index].reference.id ).collection('comentarios').snapshots(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.waiting:
+                                          return Container(
+                                           
+                                            child: Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              )
+                                            /*
+                                            Center(
+                                            child: CircularProgressIndicator(
+                                                backgroundColor: Color(0xffb34700),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
+                                            )
+                                            */
+                                          );
+                                          break;
+                                        default:
+                                          if (!snapshot.hasData) {
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          } else {                                        
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    snapshot.data.docs.length.toString(),
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          }
+                                        }
+                                    }
+                                  ),
+                         ),
+
+                          /*
                           Row(
                             children: [
                               Text(
@@ -319,6 +393,7 @@ class _TelaInicialState extends State<TelaInicial> {
                                   onPressed: () {}),
                             ],
                           ),
+                          */
 
                           IconButton(
                                   icon: Icon(
@@ -499,20 +574,99 @@ class _TelaInicialState extends State<TelaInicial> {
                                   onPressed: () {}),
                             ],
                           ),
+                          //ALTERAR A LINHA DE BAIXO//ADICIONAR UM STREAM
+
+                         Container(
+                           child:  StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection('contos').doc( widget.listaContos[index].reference.id ).collection('comentarios').snapshots(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.waiting:
+                                          return Container(
+                                           
+                                            child: Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              )
+                                            /*
+                                            Center(
+                                            child: CircularProgressIndicator(
+                                                backgroundColor: Color(0xffb34700),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
+                                            )
+                                            */
+                                          );
+                                          break;
+                                        default:
+                                          if (!snapshot.hasData) {
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    '0',
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          } else {                                        
+                                            return Row(
+                                                children: [
+                                                  Text(
+                                                    snapshot.data.docs.length.toString(),
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(
+                                                        color: Color(0xffb34700), fontSize: 18.0),
+                                                  ),
+
+                                                  IconButton(
+                                                      icon: Icon(Icons.mode_comment_outlined,
+                                                          color: Color(0xffb34700)),
+                                                      onPressed: () {}),
+                                                ],
+                                              );
+                                          }
+                                        }
+                                    }
+                                  ),
+                         ),
+
+                         /*
+                                
                           Row(
                             children: [
                               Text(
-                                widget.listaContos[index]['comentarios'].toString(),
+                                comentariosValor.toString(),
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
                                     color: Color(0xffb34700), fontSize: 18.0),
                               ),
+
                               IconButton(
                                   icon: Icon(Icons.mode_comment_outlined,
                                       color: Color(0xffb34700)),
                                   onPressed: () {}),
                             ],
                           ),
+                          */
 
                           IconButton(
                               icon: Icon(
@@ -666,7 +820,7 @@ class _TelaInicialState extends State<TelaInicial> {
                         ),
                       ),
 
-                      index != 0 && index % 4 == 0 ?
+                      index != 0 && index % 6 == 0 ?
                         Column(
                           children: [
                               SizedBox(
@@ -690,92 +844,6 @@ class _TelaInicialState extends State<TelaInicial> {
                                 SizedBox(
                                   height: 12,
                                 ),
-
-                                /*
-
-                                Container(
-                                  height: 220,
-                                  child: FutureBuilder<QuerySnapshot>(
-                                    future: FirebaseFirestore.instance.collection('contos').orderBy('visualizações', descending: true ).get(),
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                        case ConnectionState.waiting:
-                                          return Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: Center(
-                                            child: CircularProgressIndicator(
-                                                backgroundColor: Color(0xffb34700),
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<Color>(Color(0xffb34700))),
-                                            )
-                                          );
-                                          break;
-                                        default:
-                                          if (!snapshot.hasData) {
-                                            return Container();
-                                          } else {
-                                              snapshot.data.docs.forEach((element) {
-                                               sugeridos.add(element);
-                                              });
-                                            return ListView.separated(
-                                                scrollDirection: Axis.horizontal,
-                                                padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                                                  itemCount: sugeridos.length,
-                                                  separatorBuilder: (context, index) => Divider(
-                                                        height: 5.0,
-                                                        color: Colors.grey[800],
-                                                        //thickness: 1.0,
-                                                      ),
-                                                   itemBuilder: (context, index){
-                                                     return Padding(padding: EdgeInsets.only(right: 8),
-                                                      child: Container(
-                                                        width: 250,
-                                                        child: Card(                                                       
-                                                        
-                                                        color: Color(0xff111111),
-                                                        child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,  
-                                                        children: [
-                                                          
-                                                          sugeridos[index]['imagem'] == null
-                                                            ? Container()
-                                                            : Image.network(
-                                                                sugeridos[index]['imagem'],
-                                                                fit: BoxFit.cover,
-                                                                width: 250,
-                                                              ),
-                                                              SizedBox(
-                                                                height: 8,
-                                                              ),
-                                                          Padding(padding: EdgeInsets.all(4),
-                                                          child: Text(sugeridos[index]['titulo'],
-                                                            maxLines: 2,
-                                                            style: TextStyle(
-                                                              color: Colors.grey,
-                                                              fontSize: 14,
-                                                              
-                                                            ),
-                                                           ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      ),
-                                                      )
-                                                     );
-                                                   },   
-                                             );
-                                          }
-                                        }
-                                    }
-                                  ),
-                                ),
-
-                                SizedBox(
-                                  height: 12,
-                                ),
-
-                                */
 
                           ],
                         ) : Container(),

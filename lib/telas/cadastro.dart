@@ -12,6 +12,7 @@ class _CadastroState extends State<Cadastro> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
+  TextEditingController usuarioController = TextEditingController();
   bool senhaSecreta = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -24,7 +25,11 @@ class _CadastroState extends State<Cadastro> {
        ).then((value){
          FirebaseFirestore.instance.collection('usuarios').doc(value.user.uid).set({
            'situação' : 'ativa',
-           'ultimoAcesso' : DateTime.now()
+           'ultimoAcesso' : DateTime.now(),
+           'usuario' : usuarioController.text
+         });
+         FirebaseFirestore.instance.collection('usuarios').doc('usuarios').collection('nomes').doc(value.user.uid).set({
+           'usuario' : usuarioController.text,
          });
          Navigator.of(context).pop();
          Navigator.of(context).pushReplacement(
@@ -53,6 +58,29 @@ class _CadastroState extends State<Cadastro> {
             child: Column(              
             children: [
               SizedBox(height: 30),
+
+              TextFormField(
+                controller: usuarioController,
+                validator: (texto){
+                  if(texto.isEmpty) return 'Usuario inválido';
+                  return null;
+                },
+                style: TextStyle(
+                  color: Colors.white
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Usuario',
+                  labelStyle: TextStyle(
+                    color: Colors.white
+                  ),
+                   suffixIcon: Icon(Icons.person, color: Colors.black),
+                  suffixStyle: TextStyle(
+                    color: Colors.black,
+                  )
+                ),
+              ),
+
+              SizedBox(height: 4),
               
               TextFormField(
                 controller: emailController,
@@ -74,6 +102,9 @@ class _CadastroState extends State<Cadastro> {
                   )
                 ),
               ),
+              
+              SizedBox(height: 4),
+
               TextFormField(
                 controller: senhaController,
                 validator: (texto){

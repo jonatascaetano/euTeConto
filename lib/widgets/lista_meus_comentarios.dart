@@ -246,7 +246,7 @@ class _MeusComentariosState extends State<MeusComentarios> {
                   ),
                 ),
 
-                index != 0 && index % 4 == 0 ?
+                index != 0 && index % 6 == 0 ?
                         Column(
                           children: [
                               SizedBox(

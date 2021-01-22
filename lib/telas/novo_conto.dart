@@ -250,6 +250,13 @@ class _NovoContoState extends State<NovoConto> {
                       onPressed: (){
                        if(tituloController.text.isNotEmpty && textoController.text.isNotEmpty && textoController.text.length > 560){
                          salvarTexto();
+                       }else{
+                         SnackBar snackbar = SnackBar(content: Text('Verifique se o título e a categoria foram preenchidos e se o texto possui mais de 560 caracteres e tente novamente.',
+                          style: TextStyle(
+                            color: Colors.grey
+                          ),
+                         ));
+                         Scaffold.of(context).showSnackBar(snackbar);                         
                        }
                       }
                     ),
@@ -258,6 +265,7 @@ class _NovoContoState extends State<NovoConto> {
                     SizedBox(
                     height: 8,
                   ),
+                  
                   ],
               ),
             );

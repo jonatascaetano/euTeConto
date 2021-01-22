@@ -28,6 +28,7 @@ class _ContoState extends State<Conto> {
   User user;
   List<DocumentSnapshot> sugeridos = List();
   List<Map> imagensCategoria = List();
+  AdmobInterstitial interstitialAd;
 
   //funções
   
@@ -232,8 +233,30 @@ class _ContoState extends State<Conto> {
     aumentarView();
     recuperarImagensCategoria();
 
+    interstitialAd = AdmobInterstitial(
+          adUnitId: 'ca-app-pub-1685263058686351/7392476493',
+          listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+            if (event == AdmobAdEvent.closed) interstitialAd.load();
+            handleEvent(event, args, 'Interstitial');
+          },
+        );
+        interstitialAd.load();
+      
+      }
 
-  }
+    void showInterstitial() async {
+      if (await interstitialAd.isLoaded) {
+        interstitialAd.show();
+      } else {
+        print("Interstitial ainda não foi carregado...");
+      }
+    }
+
+    @override
+    void dispose() {
+      super.dispose();
+      interstitialAd.dispose();
+    }
 
 
   @override
@@ -345,15 +368,21 @@ class _ContoState extends State<Conto> {
                                         width:
                                             MediaQuery.of(context).size.width,
                                       ),
-                                */ 
+                                
                                  SizedBox(
                                   height: 12,
                                 ),
-
+                                
                                 Container(                                
                                   child: getMiniBanner1(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
-                                ),     
+                                ),
 
+                                
+                                Container(                                
+                                  child: getBanner(AdmobBannerSize.MEDIUM_RECTANGLE),
+                                ),
+                                */
+     
                                 SizedBox(
                                   height: 12,
                                 ),
@@ -588,10 +617,18 @@ class _ContoState extends State<Conto> {
                                 SizedBox(
                                   height: 12,
                                 ),
-                                
+
                                 Container(                                
                                   child: getBanner(AdmobBannerSize.MEDIUM_RECTANGLE),
                                 ),
+                                
+                                /*
+
+                                Container(                                
+                                  child: getMiniBanner1(AdmobBannerSize.ADAPTIVE_BANNER(width: 300)),
+                                ),
+
+                                */
                                
                                 SizedBox(
                                   height: 12,
@@ -616,7 +653,7 @@ class _ContoState extends State<Conto> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: comentariosLista.reversed.toList()
-                                            .map((doc) => ComentariosConto(doc, dados['autor'])).toList(),
+                                            .map((doc) => ComentariosConto(doc, dados['autor'], snapshot.data.reference.id)).toList(),
                                       ),
 
                                 /*
@@ -672,7 +709,13 @@ class _ContoState extends State<Conto> {
                                                         //thickness: 1.0,
                                                       ),
                                                    itemBuilder: (context, index){
-                                                     return Padding(padding: EdgeInsets.only(right: 8),
+                                                     return GestureDetector(
+                                                       onTap: (){
+                                                          showInterstitial();                                         
+                                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                              builder: (context) => Conto(sugeridos[index].reference.id)));
+                                                       },
+                                                       child: Padding(padding: EdgeInsets.only(right: 8),
                                                       child: Container(
                                                         width: 250,
                                                         child: Card(                                                       
@@ -706,6 +749,7 @@ class _ContoState extends State<Conto> {
                                                       ),
                                                       ),
                                                       )
+                                                     ),
                                                      );
                                                    },   
                                              );
